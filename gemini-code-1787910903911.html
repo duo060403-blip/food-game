@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3D2314">
+<title>爆忙！一人食堂 🍳</title>
+<style>
+  :root {
+    --wood-dark: #3D2314;
+    --wood-med: #6B4226;
+    --wood-light: #C28B57;
+    --wood-bg: #F4E3C1;
+    --panel-bg: #FFF5E1;
+    --border-wood: #53331C;
+    --primary: #FF7A45;
+    --primary-deep: #D0420D;
+    --shadow: 0 8px 20px rgba(61, 35, 20, 0.35);
+    --r-lg: 24px;
+    --r-md: 16px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height: 100vh; height: 100dvh; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #2B180E;
+    color: var(--wood-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+  }
+  .hidden { display: none !important; }
+  button { font-family: inherit; border: none; cursor: pointer; }
+
+  /* 游戏总容器：严格单屏限定 */
+  .game-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 920px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M0 0h100v100H0z" fill="%23000"/></svg>'), #DCC39E;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* 背景图层（复刻图一厨房背景氛围） */
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,220,180,0.4) 0%, rgba(61,35,20,0.7) 100%),
+                linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* 屏幕通用样式 */
+  .screen {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 16px;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: none; } }
+
+  /* ================= 首页样式（图一逻辑） ================= */
+  .home-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+  .rank-badge-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-bg);
+    border: 3px solid var(--border-wood);
+    border-radius: 999px;
+    padding: 4px 12px 4px 4px;
+    box-shadow: var(--shadow);
+  }
+  .rank-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #FFD1A9; display: grid; place-items: center; font-size: 20px;
+    border: 2px solid var(--border-wood);
+  }
+  .rank-info { display: flex; flex-direction: column; gap: 2px; }
+  .rank-title { font-size: 11px; font-weight: 900; color: var(--wood-med); }
+  .exp-bar { width: 70px; height: 6px; background: #E6D0B3; border-radius: 3px; overflow: hidden; border: 1px solid var(--border-wood); }
+  .exp-fill { width: 40%; height: 100%; background: var(--primary); }
+
+  .settings-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--panel-bg); border: 3px solid var(--border-wood);
+    display: grid; place-items: center; font-size: 22px; box-shadow: var(--shadow);
+    transition: transform 0.1s;
+  }
+  .settings-btn:active { transform: scale(0.92); }
+
+  .home-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    z-index: 2;
+  }
+  .home-logo {
+    width: 100px; height: 100px; border-radius: 30px;
+    background: linear-gradient(135deg, #FFE3C7, #FFC08C);
+    border: 4px solid var(--border-wood);
+    display: grid; place-items: center; font-size: 50px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    animation: floatLogo 3s ease-in-out infinite;
+  }
+  @keyframes floatLogo { 0%,100%{transform:translateY(0) rotate(-2deg);} 50%{transform:translateY(-8px) rotate(2deg);} }
+
+  .home-title {
+    font-size: 34px; font-weight: 900; color: #FFF;
+    text-shadow: 3px 3px 0 var(--border-wood), -2px -2px 0 var(--border-wood), 2px -2px 0 var(--border-wood), -2px 2px 0 var(--border-wood);
+    letter-spacing: 2px;
+  }
+  .home-sub {
+    font-size: 13px; font-weight: 800; color: #FFEBD0;
+    background: rgba(61,35,20,0.7); padding: 4px 12px; border-radius: 8px;
+    border: 2px solid var(--wood-light);
+  }
+
+  .start-game-btn {
+    width: 85%; max-width: 320px; padding: 16px;
+    border-radius: 999px; font-size: 20px; font-weight: 900; color: #FFF;
+    background: linear-gradient(135deg, #FFB35C 0%, #FF7A45 60%, #D0420D 100%);
+    border: 4px solid var(--border-wood);
+    box-shadow: 0 8px 0 #8B3108, 0 14px 25px rgba(0,0,0,0.4);
+    letter-spacing: 3px; z-index: 5;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .start-game-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #8B3108, 0 8px 15px rgba(0,0,0,0.4);
+  }
+
+  /* ================= 游戏界面样式（图二复刻） ================= */
+  .game-hud {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  /* 木质卷轴头部 */
+  .wood-scroll-bar {
+    flex: 1;
+    background: linear-gradient(90deg, #E6C298, #FFF2D6, #E6C298);
+    border: 3px solid var(--border-wood);
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 14px; font-weight: 900; color: var(--wood-dark);
+    box-shadow: var(--shadow);
+  }
+  .hud-icon-btn {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: var(--panel-bg); border: 3px solid var(--border-wood);
+    display: grid; place-items: center; font-size: 20px; box-shadow: var(--shadow);
+  }
+  .hud-icon-btn:active { transform: scale(0.92); }
+
+  /* 倒计时与KPI条 */
+  .time-kpi-box {
+    background: rgba(255,245,225,0.9);
+    border: 3px solid var(--border-wood);
+    border-radius: 14px;
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow);
+  }
+  .time-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 900; color: var(--wood-med); }
+  .progress-track {
+    height: 8px; background: #E2C29B; border-radius: 4px; overflow: hidden; border: 1.5px solid var(--border-wood);
+  }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #FF9A5C, #FF4500); width: 0%; transition: width 0.2s; }
+
+  /* 木质订单卡片区域 */
+  .order-card-box {
+    background: linear-gradient(135deg, #D49B6A, #B47343);
+    border: 3.5px solid var(--border-wood);
+    border-radius: 18px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+  }
+  .customer-speech {
+    font-size: 11px; font-weight: 900; color: #FFF;
+    background: rgba(61,35,20,0.6); padding: 4px 8px; border-radius: 8px;
+    border: 1.5px solid #F4E3C1; line-height: 1.3;
+  }
+  .order-items-row { display: flex; gap: 8px; flex: 1; justify-content: center; }
+  .order-chip {
+    background: var(--panel-bg); border: 2.5px solid var(--border-wood);
+    border-radius: 12px; padding: 4px 10px; display: flex; flex-direction: column; align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .order-chip .e { font-size: 22px; line-height: 1; }
+  .order-chip .n { font-size: 10px; font-weight: 900; color: var(--wood-med); }
+
+  /* 九宫格食物网格 */
+  .food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    flex: 1;
+  }
+  .food-grid-btn {
+    background: var(--panel-bg);
+    border: 3px solid var(--border-wood);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: 0 6px 14px rgba(61,35,20,0.25);
+    transition: transform 0.1s, background 0.1s;
+    position: relative;
+  }
+  .food-grid-btn:active { transform: scale(0.92); background: #FFE0B2; }
+  .food-grid-btn .e { font-size: clamp(28px, 8vw, 38px); line-height: 1; }
+  .food-grid-btn .n { font-size: 11px; font-weight: 900; color: var(--wood-dark); }
+  .food-grid-btn.picked { border-color: var(--primary); background: #FFE5D0; }
+  .food-grid-btn.picked::after {
+    content: '✓'; position: absolute; top: 4px; right: 6px;
+    width: 18px; height: 18px; background: var(--primary); color: #FFF;
+    border-radius: 50%; font-size: 11px; font-weight: 900; display: grid; place-items: center;
+  }
+
+  /* 底部托盘与垃圾桶区域 */
+  .tray-footer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tray-slots {
+    flex: 1;
+    background: linear-gradient(135deg, #D49B6A, #B47343);
+    border: 3px solid var(--border-wood);
+    border-radius: 16px;
+    padding: 6px 10px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    box-shadow: var(--shadow);
+  }
+  .tray-empty-tip { font-size: 12px; font-weight: 900; color: #FFF; margin: 0 auto; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
+  .tray-item-chip { font-size: 24px; background: var(--panel-bg); border: 2px solid var(--border-wood); border-radius: 10px; padding: 2px 6px; }
+
+  .trash-btn {
+    width: 52px; height: 52px; border-radius: 16px;
+    background: #E87A5D; border: 3px solid var(--border-wood);
+    display: grid; place-items: center; font-size: 22px; box-shadow: var(--shadow);
+    transition: transform 0.1s; flex-shrink: 0;
+  }
+  .trash-btn:active { transform: scale(0.92); }
+
+  /* ================= 弹窗与面板（选关 / 设置 / 结算） ================= */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(43,24,14,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+
+  .modal-panel {
+    width: min(340px, 90vw);
+    background: var(--wood-bg);
+    border: 4px solid var(--border-wood);
+    border-radius: 24px;
+    padding: 22px 18px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+  .modal-title { font-size: 20px; font-weight: 900; color: var(--wood-dark); letter-spacing: 1px; }
+  .modal-content { font-size: 13px; font-weight: 800; color: var(--wood-med); line-height: 1.6; text-align: left; }
+  
+  .btn-wood {
+    padding: 12px 20px; border-radius: 999px; font-size: 15px; font-weight: 900; color: #FFF;
+    background: linear-gradient(135deg, #FFB35C, #FF7A45);
+    border: 3px solid var(--border-wood);
+    box-shadow: 0 6px 0 #8B3108, 0 10px 20px rgba(0,0,0,0.3);
+    transition: transform 0.1s;
+  }
+  .btn-wood:active { transform: translateY(3px); box-shadow: 0 3px 0 #8B3108, 0 5px 10px rgba(0,0,0,0.3); }
+
+  /* 提示 Toast */
+  .toast {
+    position: absolute; top: 10%; left: 50%; transform: translateX(-50%) translateY(-10px);
+    background: var(--wood-dark); color: #FFF; border: 2px solid var(--wood-light);
+    padding: 8px 18px; border-radius: 999px; font-size: 13px; font-weight: 900;
+    box-shadow: var(--shadow); z-index: 100; opacity: 0; pointer-events: none; transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="game-container">
+  <div class="bg-layer"></div>
+
+  <!-- ================= 首页 (图一视觉 & 逻辑) ================= -->
+  <main id="screenHome" class="screen">
+    <div class="home-top-bar">
+      <!-- 左上角：当前段位与经验条 -->
+      <div class="rank-badge-box">
+        <div class="rank-avatar" id="homeAvatar">🌱</div>
+        <div class="rank-info">
+          <span class="rank-title" id="homeRankName">见习店员 Lv.1</span>
+          <div class="exp-bar"><div class="exp-fill" id="homeExpFill"></div></div>
+        </div>
+      </div>
+      <!-- 右上角：设置菜单 -->
+      <button class="settings-btn" id="settingsBtn" title="设置菜单">⚙️</button>
+    </div>
+
+    <div class="home-center">
+      <div class="home-logo">🍳</div>
+      <h1 class="home-title">爆忙！一人食堂</h1>
+      <div class="home-sub">一个人，也要把整间食堂经营得热气腾腾。</div>
+    </div>
+
+    <div style="display:flex; justify-content:center; padding-bottom: 20px;">
+      <button class="start-game-btn" id="startHomeBtn">🔥 开始游戏</button>
+    </div>
+  </main>
+
+  <!-- ================= 游戏界面 (图二视觉 & 逻辑) ================= -->
+  <main id="screenGame" class="screen hidden">
+    <header class="game-hud">
+      <div class="wood-scroll-bar" id="levelTitleBar">第 1 / 10 关 · 新手试业</div>
+      <button class="hud-icon-btn" id="soundToggleBtn">🔊</button>
+      <button class="hud-icon-btn" id="pauseGameBtn">⏸️</button>
+    </header>
+
+    <!-- 倒计时与 KPI 进度 -->
+    <div class="time-kpi-box">
+      <div class="time-row">
+        <span>⏱️ 营业倒计时: <b id="timeText" style="color:#D0420D;">60s</b></span>
+        <span>🎯 KPI 目标: <b id="kpiText">0 / 15</b></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="kpiFill"></div></div>
+    </div>
+
+    <!-- 木质订单卡片 -->
+    <section class="order-card-box">
+      <div class="customer-speech" id="customerAvatar">👧<br>要点:</div>
+      <div class="order-items-row" id="orderItemsContainer"></div>
+    </section>
+
+    <!-- 九宫格食物按钮 (复刻图二) -->
+    <section class="food-grid" id="foodGrid"></section>
+
+    <!-- 底部托盘与垃圾桶 -->
+    <div class="tray-footer-row">
+      <div class="tray-slots" id="trayContainer">
+        <span class="tray-empty-tip">👐 托盘是空的，请按订单点餐</span>
+      </div>
+      <button class="trash-btn" id="clearTrayBtn" title="清空托盘">🗑️</button>
+    </div>
+  </main>
+
+</div>
+
+<!-- ================= 弹窗面板 ================= -->
+
+<!-- 设置与新手指南面板 -->
+<div id="settingsModal" class="overlay">
+  <div class="modal-panel">
+    <div class="modal-title">⚙️ 游戏设置</div>
+    <div class="modal-content">
+      <b>📖 新店长上岗指南：</b><br>
+      1. 观察上方顾客订单，点击九宫格对应食物。<br>
+      2. 凑齐所有订单食物会自动上菜加分。<br>
+      3. 在限定时间内达成关卡 KPI 即可通关！
+    </div>
+    <button class="btn-wood" id="closeSettingsBtn">确定返回</button>
+  </div>
+</div>
+
+<!-- 关卡选择/最高分过渡面板（点击“开始游戏”后弹出，不晒战报） -->
+<div id="levelSelectModal" class="overlay">
+  <div class="modal-panel">
+    <div class="modal-title">🛎️ 选择挑战关卡</div>
+    <div class="modal-content" style="text-align:center;">
+      <p style="font-size:14px; margin-bottom:6px;">🏆 历史最高分: <b id="modalBestScore" style="color:#D0420D; font-size:18px;">0</b> 分</p>
+      <p style="font-size:13px; margin-bottom:12px;">📍 当前段位: <b id="modalCurrentRank" style="color:#D0420D;">见习店员 Lv.1</b></p>
+      <hr style="border:0; border-top:2px dashed #C28B57; margin:8px 0;">
+      <p style="font-size:12px; font-weight:900; margin-bottom:6px;">选择已解锁关卡：</p>
+      <div id="levelBranchList" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+        <!-- 动态生成关卡按钮 -->
+      </div>
+    </div>
+    <button class="btn-wood" id="closeLevelModalBtn" style="font-size:13px; padding:10px;">返回主页</button>
+  </div>
+</div>
+
+<!-- 关卡结算面板（过关或失败时的手动选择） -->
+<div id="resultModal" class="overlay">
+  <div class="modal-panel">
+    <div class="modal-title" id="resultTitle">🎉 本关达成！</div>
+    <div class="modal-content" style="text-align:center;" id="resultDesc">
+      成功完成本关营业！
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-wood" id="resultHomeBtn" style="flex:1; background:#9E6B4A; font-size:13px;">返回主页</button>
+      <button class="btn-wood" id="resultNextBtn" style="flex:1; font-size:13px;">下一关</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastBox">提示信息</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // 关卡配置
+  const LEVELS = [
+    { name: '新手试业', kpi: 12, time: 60 },
+    { name: '小店迎客', kpi: 15, time: 60 },
+    { name: '渐入佳境', kpi: 18, time: 58 },
+    { name: '熟能生巧', kpi: 20, time: 58 },
+    { name: '效率之星', kpi: 22, time: 56 },
+    { name: '得心应手', kpi: 24, time: 56 },
+    { name: '金牌店员', kpi: 26, time: 54 },
+    { name: '独当一面', kpi: 28, time: 54 },
+    { name: '王牌主厨', kpi: 30, time: 52 },
+    { name: '魔鬼经理', kpi: 35, time: 50 }
+  ];
+
+  const RANKS = [
+    { min: 200, name: '五星主厨 Lv.5', icon: '👑' },
+    { min: 140, name: '金牌店长 Lv.4', icon: '🏆' },
+    { min: 90,  name: '王牌主厨 Lv.3', icon: '🔥' },
+    { min: 50,  name: '资深主厨 Lv.2', icon: '🍳' },
+    { min: 0,   name: '见习店员 Lv.1', icon: '🌱' }
+  ];
+
+  // 图二对应的 9 种食物
+  const FOODS = [
+    { id: 'burger',   emoji: '🍔', name: '汉堡' },
+    { id: 'sushi',    emoji: '🍣', name: '寿司' },
+    { id: 'ramen',    emoji: '🍜', name: '拉面' },
+    { id: 'cake',     emoji: '🍰', name: '食单' }, // 图二字样
+    { id: 'milktea',  emoji: '🧋', name: '奶茶' },
+    { id: 'skewer',   emoji: '🍢', name: '串屠' },
+    { id: 'dumpling', emoji: '🥟', name: '吃子' },
+    { id: 'icecream', emoji: '🍦', name: '冰淇' },
+    { id: 'pancake',  emoji: '🥞', name: '松饼' }
+  ];
+
+  const CUSTOMERS = ['👧','🧒','👦','👩','🧑','👨'];
+
+  // 本地存储数据
+  const store = {
+    get(k, d) { try { let v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch(e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+  };
+
+  let bestScore = Number(store.get('bc_best', 0)) || 0;
+  let unlockedLevel = Number(store.get('bc_unlocked', 0)) || 0;
+  let soundEnabled = store.get('bc_sound', true) !== false;
+
+  // 游戏运行状态
+  let currentLevelIdx = 0;
+  let score = 0;
+  let levelScore = 0;
+  let timeLeft = 60;
+  let timerId = null;
+  let currentOrder = [];
+  let selectedTray = [];
+  let isLocked = false;
+
+  // DOM 元素映射
+  const $ = id => document.getElementById(id);
+
+  function showToast(msg) {
+    const box = $('toastBox');
+    box.textContent = msg;
+    box.classList.add('show');
+    setTimeout(() => box.classList.remove('show'), 1500);
+  }
+
+  function getRank(sc) {
+    for (let r of RANKS) { if (sc >= r.min) return r; }
+    return RANKS[RANKS.length - 1];
+  }
+
+  // 刷新首页段位
+  function updateHomeRank() {
+    let r = getRank(bestScore);
+    $('homeAvatar').textContent = r.icon;
+    $('homeRankName').textContent = r.name;
+    $('homeExpFill').style.width = Math.min(100, (bestScore / 200) * 100) + '%';
+  }
+
+  // 初始化九宫格食物
+  function buildFoodGrid() {
+    const grid = $('foodGrid');
+    grid.innerHTML = '';
+    FOODS.forEach(f => {
+      let btn = document.createElement('button');
+      btn.className = 'food-grid-btn';
+      btn.dataset.id = f.id;
+      btn.innerHTML = `<span class="e">${f.emoji}</span><span class="n">${f.name}</span>`;
+      btn.addEventListener('click', () => onFoodClick(f.id));
+      grid.appendChild(btn);
+    });
+  }
+
+  // 生成新订单（2-3个食物组合）
+  function generateOrder() {
+    let shuffled = [...FOODS].sort(() => Math.random() - 0.5);
+    let count = Math.random() > 0.5 ? 2 : 2; // 可调为2-3
+    currentOrder = shuffled.slice(0, count).map(f => f.id);
+
+    let container = $('orderItemsContainer');
+    container.innerHTML = '';
+    currentOrder.forEach(id => {
+      let f = FOODS.find(item => item.id === id);
+      let chip = document.createElement('div');
+      chip.className = 'order-chip';
+      chip.innerHTML = `<span class="e">${f.emoji}</span><span class="n">${f.name}</span>`;
+      container.appendChild(chip);
+    });
+    $('customerAvatar').innerHTML = `${CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)]}<br>要点:`;
+    selectedTray = [];
+    renderTray();
+  }
+
+  function renderTray() {
+    let tray = $('trayContainer');
+    if (selectedTray.length === 0) {
+      tray.innerHTML = `<span class="tray-empty-tip">👐 托盘是空的，请按订单点餐</span>`;
+    } else {
+      tray.innerHTML = '';
+      selectedTray.forEach(id => {
+        let f = FOODS.find(item => item.id === id);
+        let span = document.createElement('span');
+        span.className = 'tray-item-chip';
+        span.textContent = f.emoji;
+        tray.appendChild(span);
+      });
+    }
+    // 更新九宫格选中态
+    document.querySelectorAll('.food-grid-btn').forEach(btn => {
+      let id = btn.dataset.id;
+      btn.classList.toggle('picked', selectedTray.includes(id));
+    });
+  }
+
+  // 点击食物逻辑（保留点错清空托盘的严厉爽快机制）
+  function onFoodClick(id) {
+    if (isLocked) return;
+    let needCount = currentOrder.filter(x => x === id).length;
+    let haveCount = selectedTray.filter(x => x === id).length;
+
+    if (needCount === 0 || haveCount >= needCount) {
+      // 点错或超额 -> 清空托盘报错
+      selectedTray = [];
+      renderTray();
+      showToast('❌ 点错啦！托盘已清空');
+      return;
+    }
+
+    selectedTray.push(id);
+    renderTray();
+
+    // 检查是否完成订单
+    if (selectedTray.length === currentOrder.length) {
+      let match = selectedTray.slice().sort().join(',') === currentOrder.slice().sort().join(',');
+      if (match) {
+        levelScore++;
+        score++;
+        updateGameHUD();
+        showToast('✨ 上菜成功 +1！');
+        isLocked = true;
+        setTimeout(() => {
+          let lv = LEVELS[currentLevelIdx];
+          if (levelScore >= lv.kpi) {
+            endLevel(true);
+          } else {
+            generateOrder();
+            isLocked = false;
+          }
+        }, 400);
+      }
+    }
+  }
+
+  function updateGameHUD() {
+    let lv = LEVELS[currentLevelIdx];
+    $('levelTitleBar').textContent = `第 ${currentLevelIdx + 1} / 10 关 · ${lv.name}`;
+    $('kpiText').textName = `${levelScore} / ${lv.kpi}`;
+    $('kpiText').textContent = `${levelScore} / ${lv.kpi}`;
+    let pct = Math.min(100, (levelScore / lv.kpi) * 100);
+    $('kpiFill').style.width = pct + '%';
+  }
+
+  function updateTimerUI() {
+    $('timeText').textContent = Math.ceil(timeLeft) + 's';
+  }
+
+  function startLevel(idx) {
+    currentLevelIdx = idx;
+    levelScore = 0;
+    let lv = LEVELS[idx];
+    timeLeft = lv.time;
+    updateGameHUD();
+    updateTimerUI();
+    generateOrder();
+
+    $('screenHome').classList.add('hidden');
+    $('levelSelectModal').classList.remove('show');
+    $('resultModal').classList.remove('show');
+    $('screenGame').classList.remove('hidden');
+
+    clearInterval(timerId);
+    timerId = setInterval(() => {
+      timeLeft = Math.max(0, timeLeft - 0.1);
+      updateTimerUI();
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        let lv = LEVELS[currentLevelIdx];
+        if (levelScore >= lv.kpi) {
+          endLevel(true);
+        } else {
+          endLevel(false);
+        }
+      }
+    }, 100);
+  }
+
+  function endLevel(victory) {
+    isLocked = true;
+    clearInterval(timerId);
+
+    if (victory && currentLevelIdx >= unlockedLevel) {
+      unlockedLevel = Math.min(LEVELS.length - 1, currentLevelIdx + 1);
+      store.set('bc_unlocked', unlockedLevel);
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      store.set('bc_best', bestScore);
+      updateHomeRank();
+    }
+
+    $('resultTitle').textContent = victory ? '🎉 本关达成！' : '⏰ 营业时间到';
+    $('resultDesc').innerHTML = victory ? 
+      `成功达成第 ${currentLevelIdx + 1} 关 KPI！<br>当前总得分: <b>${score}</b>` : 
+      `差一点就达标啦！再接再厉～<br>本关得分: <b>${levelScore}</b>`;
+    
+    // 如果通关最后一关，隐藏下一关按钮
+    $('resultNextBtn').style.display = (victory && currentLevelIdx < LEVELS.length - 1) ? 'block' : 'none';
+    $('resultModal').classList.add('show');
+  }
+
+  // 事件绑定
+  // 1. 首页设置按钮
+  $('settingsBtn').addEventListener('click', () => {
+    $('settingsModal').classList.add('show');
+  });
+  $('closeSettingsBtn').addEventListener('click', () => {
+    $('settingsModal').classList.remove('show');
+  });
+
+  // 2. 点击“开始游戏” -> 弹出选关面板（不晒战报，展示最高分与段位）
+  $('startHomeBtn').addEventListener('click', () => {
+    $('modalBestScore').textContent = bestScore;
+    $('modalCurrentRank').textContent = getRank(bestScore).name;
+
+    // 渲染关卡分支
+    let list = $('levelBranchList');
+    list.innerHTML = '';
+    LEVELS.forEach((lv, i) => {
+      let btn = document.createElement('button');
+      btn.className = 'btn-wood';
+      let isUnlocked = i <= unlockedLevel;
+      btn.style.padding = '8px';
+      btn.style.fontSize = '12px';
+      btn.style.background = isUnlocked ? 'linear-gradient(135deg, #FFB35C, #FF7A45)' : '#888';
+      btn.textContent = `第${i+1}关${isUnlocked?'':'🔒'}`;
+      if (isUnlocked) {
+        btn.addEventListener('click', () => {
+          score = 0; // 重置本轮积分
+          startLevel(i);
+        });
+      }
+      list.appendChild(btn);
+    });
+
+    $('levelSelectModal').classList.add('show');
+  });
+
+  $('closeLevelModalBtn').addEventListener('click', () => {
+    $('levelSelectModal').classList.remove('show');
+  });
+
+  // 3. 游戏内音效切换与暂停
+  $('soundToggleBtn').addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    store.set('bc_sound', soundEnabled);
+    $('soundToggleBtn').textContent = soundEnabled ? '🔊' : '🔇';
+    showToast(soundEnabled ? '音效已开启' : '音效已关闭');
+  });
+
+  $('pauseGameBtn').addEventListener('click', () => {
+    clearInterval(timerId);
+    if (confirm('是否退出当前游戏返回主页？')) {
+      $('screenGame').classList.add('hidden');
+      $('screenHome').classList.remove('hidden');
+      updateHomeRank();
+    } else {
+      // 恢复计时
+      timerId = setInterval(() => {
+        timeLeft = Math.max(0, timeLeft - 0.1);
+        updateTimerUI();
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          endLevel(levelScore >= LEVELS[currentLevelIdx].kpi);
+        }
+      }, 100);
+    }
+  });
+
+  // 4. 清空托盘按钮
+  $('clearTrayBtn').addEventListener('click', () => {
+    selectedTray = [];
+    renderTray();
+    showToast('🧹 托盘已清空');
+  });
+
+  // 5. 结算面板按钮
+  $('resultHomeBtn').addEventListener('click', () => {
+    $('resultModal').classList.remove('show');
+    $('screenGame').classList.add('hidden');
+    $('screenHome').classList.remove('hidden');
+    updateHomeRank();
+  });
+
+  $('resultNextBtn').addEventListener('click', () => {
+    $('resultModal').classList.remove('show');
+    if (currentLevelIdx + 1 < LEVELS.length) {
+      startLevel(currentLevelIdx + 1);
+    }
+  });
+
+  // 初始化执行
+  updateHomeRank();
+  buildFoodGrid();
+  $('soundToggleBtn').textContent = soundEnabled ? '🔊' : '🔇';
+
+})();
+</script>
+</body>
+</html>
