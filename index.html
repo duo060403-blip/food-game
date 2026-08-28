@@ -90,13 +90,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .home-footer{margin-top:auto;padding-bottom:6px;}
 .mini-tip{margin-top:10px;text-align:center;font-size:11px;color:#8A4E2E;font-weight:700;}
 .mini-tip .link{text-decoration:underline;cursor:pointer;}
-#screenHome{
-  background:linear-gradient(rgba(64,28,10,.16),rgba(64,28,10,.16)),url('厨房背景.png') center/cover no-repeat;
-}
-.home-chef{
-  flex:none;height:clamp(92px,24vh,160px);width:auto;pointer-events:none;
-  filter:drop-shadow(0 8px 10px rgba(90,40,10,.38));
-}
 .overlay{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(80,40,15,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 .overlay.show{display:flex;animation:fadeIn .18s ease;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -210,7 +203,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 @media (max-height:640px){
   .logo-badge{width:96px;height:96px;font-size:44px;}
   .home-hero{gap:6px;}
-  .home-chef{height:96px;}
   .order-card{padding:8px 10px;}
   .grid{gap:6px;margin-bottom:6px;}
   .tray{min-height:48px;padding:7px 8px;}
@@ -224,7 +216,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   .game-title{font-size:24px;}
   .avatar{width:46px;height:46px;font-size:25px;}
   .slogan{padding:5px 12px;}
-  .home-chef{height:64px;}
 }
 </style></head>
 <body>
@@ -245,7 +236,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     <div class="logo-badge">🍳</div>
     <h1 class="game-title">爆忙！一人食堂</h1>
     <p class="slogan">一个人，也要把整间食堂经营得热气腾腾</p>
-    <img class="home-chef" src="厨师透明%20PNG.png" alt="厨师">
   </div>
   <div class="home-footer">
     <button class="btn3d big" id="startBtn">🛎️ 开始游戏</button>
@@ -396,7 +386,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 
 <div id="toast"></div>
 <style>.panel{scrollbar-width:none;}.panel::-webkit-scrollbar{display:none;}</style>
-<script[cite: 2]>(() => {
+<script>(() => {
 'use strict';
 const $  = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
@@ -738,3 +728,4 @@ newOrder();
 </script>
 </body>
 </html>
+
