@@ -2,836 +2,660 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#FFE9D3">
-<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FF7A45">
 <title>爆忙！一人食堂 🍳</title>
 <style>
-  :root{
-    --bg1:#FFF6EC;
-    --bg2:#FFE8D0;
-    --bg3:#FFD9B6;
-    --card:#FFFFFF;
-    --ink:#4A2A18;
-    --ink2:#8A6A52;
-    --ink3:#B99A80;
-    --primary:#FF7A45;
-    --primary-deep:#F4581E;
-    --primary-soft:#FFE9DC;
-    --amber:#FFB03A;
-    --amber-soft:#FFF1D6;
-    --mint:#2FBF8F;
-    --mint-soft:#DFF7EC;
-    --red:#FF5A5A;
-    --line:#FFE7D5;
-    --shadow-card:0 10px 30px -8px rgba(244,88,30,.16);
-    --shadow-btn:0 12px 24px -6px rgba(244,88,30,.45);
-    --r-lg:28px;
-    --r-md:20px;
-    --r-sm:14px;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    background:
-      radial-gradient(120% 90% at 85% -10%, #FFD9B8 0%, transparent 55%),
-      radial-gradient(120% 90% at -10% 110%, #FFC9A3 0%, transparent 55%),
-      linear-gradient(165deg, #FFF6EC 0%, #FFE8D0 45%, #FFD9B6 100%);
-    background-attachment:fixed;
-    color:var(--ink);
-    overflow-x:hidden;
-    user-select:none;-webkit-user-select:none;
-    touch-action:manipulation;
-  }
-  .hidden{display:none!important;}
-  button{font-family:inherit;border:none;cursor:pointer;touch-action:manipulation;}
-  .blob{position:fixed;border-radius:50%;filter:blur(64px);opacity:.55;z-index:0;pointer-events:none;}
-  .blob.a{width:360px;height:360px;background:#FFB27D;top:-140px;right:-90px;}
-  .blob.b{width:320px;height:320px;background:#FFC98F;bottom:-120px;left:-110px;}
-  .blob.c{width:240px;height:240px;background:#FF9E6B;top:42%;left:-130px;opacity:.4;}
-  .bg-emojis{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-  .bg-emojis span{position:absolute;font-size:34px;opacity:.14;animation:floaty 9s ease-in-out infinite;}
-  .bg-emojis span:nth-child(1){top:8%;left:6%;animation-delay:0s;}
-  .bg-emojis span:nth-child(2){top:15%;right:7%;animation-delay:1.4s;}
-  .bg-emojis span:nth-child(3){bottom:14%;left:9%;animation-delay:2.6s;}
-  .bg-emojis span:nth-child(4){bottom:8%;right:13%;animation-delay:.8s;}
-  .bg-emojis span:nth-child(5){top:52%;left:2%;animation-delay:3.4s;}
-  .bg-emojis span:nth-child(6){top:56%;right:2%;animation-delay:2s;}
-  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-16px) rotate(6deg);}}
-  .screen{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:18px 16px 28px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:14px;animation:screenIn .35s ease both;}
-  @keyframes screenIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-  .card{background:var(--card);border-radius:var(--r-md);box-shadow:var(--shadow-card),inset 0 1px 0 rgba(255,255,255,.9);}
-  .g-text{background:linear-gradient(135deg,#FF9A5C,#F4581E);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .label{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1px;}
-  .icon-btn{width:44px;height:44px;border-radius:16px;background:var(--card);box-shadow:var(--shadow-card);font-size:20px;display:grid;place-items:center;flex-shrink:0;transition:transform .12s;}
-  .icon-btn:active{transform:scale(.9);}
-  .btn-primary{
-    width:100%;padding:16px;border-radius:999px;font-size:18px;font-weight:900;color:#fff;letter-spacing:2px;
-    background:linear-gradient(135deg,#FFB35C 0%,#FF7A45 55%,#F4581E 100%);
-    box-shadow:var(--shadow-btn),inset 0 2px 0 rgba(255,255,255,.4);
-    transition:transform .12s,box-shadow .12s;
-  }
-  .btn-primary:active{transform:scale(.96);box-shadow:0 6px 14px -4px rgba(244,88,30,.5),inset 0 2px 0 rgba(255,255,255,.4);}
-  .btn-secondary{
-    padding:15px 18px;border-radius:999px;font-size:15px;font-weight:900;color:var(--primary-deep);
-    background:var(--primary-soft);border:2px solid #FFD3BC;
-    transition:transform .12s;
-  }
-  .btn-secondary:active{transform:scale(.95);}
-  .btn-secondary.saved{color:#1C9E6B;background:var(--mint-soft);border-color:#B8E8D3;}
-  .btn-ghost{background:transparent;color:var(--ink2);font-weight:800;font-size:14px;padding:10px;border-radius:12px;}
-  .btn-ghost:active{transform:scale(.95);}
-  .btn-ghost.small{font-size:13px;color:var(--ink3);}
-  .micro{font-size:11px;color:var(--ink3);text-align:center;letter-spacing:1px;}
-  .sound-btn{position:fixed;top:14px;right:14px;z-index:20;}
-  .hero{text-align:center;padding:14px 0 2px;}
-  .logo-badge{
-    width:92px;height:92px;margin:0 auto 14px;border-radius:30px;display:grid;place-items:center;font-size:46px;
-    background:linear-gradient(145deg,#FFE3C7,#FFC08C);
-    box-shadow:0 14px 30px -8px rgba(244,88,30,.35),inset 0 2px 0 rgba(255,255,255,.7);
-    animation:bob 3.2s ease-in-out infinite;
-  }
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-7px) rotate(3deg);}}
-  .hero h1{font-size:32px;font-weight:900;letter-spacing:4px;line-height:1.2;}
-  .hero .sub{font-size:13px;color:var(--ink2);margin-top:8px;letter-spacing:1px;line-height:1.6;}
-  .best-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:var(--r-md);}
-  .best-label{font-size:12px;color:var(--ink2);font-weight:800;letter-spacing:1px;}
-  .best-value{font-size:36px;font-weight:900;line-height:1.15;}
-  .best-rank{padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:900;color:var(--primary-deep);background:var(--primary-soft);white-space:nowrap;}
-  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .feat{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px 14px;text-align:center;border-radius:var(--r-md);}
-  .feat .feat-ic{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;font-size:24px;margin-bottom:2px;}
-  .feat .ic-1{background:#FFEFE0;}
-  .feat .ic-2{background:var(--mint-soft);}
-  .feat .ic-3{background:var(--amber-soft);}
-  .feat b{font-size:13px;font-weight:900;}
-  .feat span{font-size:10.5px;color:var(--ink3);font-weight:600;line-height:1.5;}
-  .guide{padding:18px 18px 16px;border-radius:var(--r-md);}
-  .guide-title{font-size:15px;font-weight:900;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-  .guide ol{list-style:none;display:flex;flex-direction:column;gap:12px;}
-  .guide li{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;line-height:1.7;color:var(--ink2);font-weight:600;}
-  .guide .step{flex-shrink:0;width:22px;height:22px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff;background:linear-gradient(135deg,#FFB35C,#F4581E);margin-top:1px;}
-  .start-wrap{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:10px;}
-  .hud{display:flex;align-items:stretch;gap:10px;}
-  .kpi-card{flex:1;padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:8px;justify-content:center;}
-  .kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .level-chip{font-size:12.5px;font-weight:900;color:var(--primary-deep);background:var(--primary-soft);padding:5px 10px;border-radius:999px;white-space:nowrap;}
-  .kpi-text{font-size:12px;font-weight:900;color:var(--ink2);white-space:nowrap;}
-  .bar-track{height:9px;border-radius:99px;background:#F7E5D4;overflow:hidden;}
-  .bar-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#FFB35C,#FF7A45);transition:width .25s ease;}
-  .bar-fill.done{background:linear-gradient(90deg,#3ECF8E,#23A97B);}
-  .row2{display:grid;grid-template-columns:1fr 1.35fr;gap:10px;}
-  .score-card{padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:2px;justify-content:center;}
-  .score-value{font-size:30px;font-weight:900;line-height:1.1;}
-  .score-value.bump{animation:bump .35s ease;}
-  .timer-card{padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:7px;justify-content:center;}
-  .timer-row{display:flex;align-items:center;gap:10px;}
-  .timer-value{font-size:22px;font-weight:900;line-height:1;min-width:44px;}
-  .timer-value.danger{color:var(--red);}
-  .timer-bar{flex:1;height:9px;border-radius:99px;background:#F7E5D4;overflow:hidden;}
-  .timer-fill{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#FFB35C,#FF7A45);transition:width .1s linear;}
-  .timer-fill.danger{background:linear-gradient(90deg,#FF7A45,#FF5A5A);animation:blink .5s steps(2) infinite;}
-  @keyframes blink{50%{opacity:.5;}}
-  .order-area{position:relative;padding:14px;border-radius:var(--r-lg);}
-  .order-area.burst{animation:pop .45s cubic-bezier(.34,1.56,.64,1);}
-  .order-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-  .customer{width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,#FFF3E6,#FFE3C7);border:2px solid var(--line);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 -3px 0 rgba(214,150,102,.18);}
-  .order-title{font-weight:900;font-size:15px;letter-spacing:1px;}
-  .order-sub{font-size:11.5px;color:var(--ink3);font-weight:600;margin-top:2px;}
-  .order-items{display:flex;gap:10px;flex-wrap:wrap;min-height:66px;align-items:center;}
-  .order-chip{display:flex;flex-direction:column;align-items:center;gap:3px;background:#FFF8EE;border:2px dashed #F5C79A;border-radius:16px;padding:8px 13px;animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
-  .order-chip .e{font-size:28px;line-height:1;}
-  .order-chip .n{font-size:11.5px;font-weight:900;color:var(--ink2);}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .food-btn{position:relative;aspect-ratio:1/1;border-radius:22px;background:var(--card);border:2.5px solid var(--line);box-shadow:var(--shadow-card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:transform .12s,box-shadow .12s,background .15s,border-color .15s;}
-  .food-btn:active{transform:scale(.92);}
-  .food-btn:hover{transform:translateY(-3px);}
-  .food-btn .e{font-size:clamp(32px,10vw,46px);line-height:1;transition:transform .15s;}
-  .food-btn .n{font-size:11.5px;font-weight:900;color:var(--ink3);}
-  .food-btn.hint{animation:hintPulse 1.5s ease-in-out infinite;}
-  .food-btn.picked{background:#FFF0E5;border-color:var(--primary);}
-  .food-btn.picked .e{transform:scale(1.12);}
-  .food-btn.picked::after{content:'✓';position:absolute;top:6px;right:8px;width:21px;height:21px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;animation:pop .3s cubic-bezier(.34,1.56,.64,1);}
-  .food-btn.wrong{animation:shake .4s ease;}
-  @keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,176,58,.55);}50%{box-shadow:0 0 0 9px rgba(255,176,58,0);}}
-  @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
-  @keyframes pop{0%{transform:scale(.6);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
-  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.35);}100%{transform:scale(1);}}
-  .tray{display:flex;align-items:center;gap:8px;}
-  .tray-items{flex:1;min-height:48px;background:var(--card);border:2.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow-card);padding:7px 12px;display:flex;align-items:center;gap:7px;overflow-x:auto;color:var(--ink3);font-weight:800;font-size:13px;}
-  .tray-items span{font-size:24px;}
-  .clear-btn{flex-shrink:0;background:#FFF0EC;border:2px solid #FFC4B4;color:var(--red);font-weight:900;border-radius:16px;padding:11px 14px;font-size:13px;transition:transform .12s;}
-  .clear-btn:active{transform:scale(.94);}
-  .hint-text{text-align:center;font-size:11.5px;color:var(--ink3);font-weight:600;letter-spacing:.5px;}
-  .overlay{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:22px;background:rgba(74,42,24,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s;}
-  .overlay.show{opacity:1;pointer-events:auto;}
-  .overlay.light{background:rgba(74,42,24,.28);}
-  .panel{transform:translateY(16px) scale(.94);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
-  .overlay.show .panel{transform:none;}
-  .intro-card{width:min(320px,86vw);text-align:center;background:var(--card);border-radius:var(--r-lg);padding:30px 24px;box-shadow:0 24px 60px -12px rgba(74,42,24,.4);}
-  .intro-emoji{font-size:56px;animation:bob 1.6s ease-in-out infinite;}
-  .intro-title{font-size:26px;font-weight:900;letter-spacing:4px;margin-top:10px;}
-  .intro-name{display:inline-block;margin-top:8px;padding:6px 16px;border-radius:999px;background:var(--primary-soft);color:var(--primary-deep);font-size:14px;font-weight:900;}
-  .intro-kpi{font-size:13px;color:var(--ink2);margin-top:14px;font-weight:700;}
-  .intro-kpi b{color:var(--primary-deep);font-size:16px;}
-  .intro-time{font-size:13px;color:var(--ink2);margin-top:6px;font-weight:700;}
-  .intro-time b{color:var(--ink);font-size:15px;}
-  .pause-card{width:min(320px,86vw);text-align:center;background:var(--card);border-radius:var(--r-lg);padding:30px 24px 22px;box-shadow:0 24px 60px -12px rgba(74,42,24,.4);display:flex;flex-direction:column;gap:8px;align-items:center;}
-  .pause-emoji{font-size:52px;}
-  .pause-card h2{font-size:22px;font-weight:900;letter-spacing:2px;}
-  .pause-card p{font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:10px;}
-  .pause-card .btn-primary{width:100%;margin-top:6px;}
-  .report-card{width:min(350px,92vw);border-radius:32px;background:var(--card);overflow:hidden;box-shadow:0 30px 70px -14px rgba(74,42,24,.45);}
-  .report-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 20px;background:linear-gradient(135deg,#FFB35C 0%,#FF7A45 60%,#F4581E 100%);}
-  .report-head span{color:#fff;font-size:13px;font-weight:900;letter-spacing:1px;}
-  .report-stamp{border:2px solid rgba(255,255,255,.9);border-radius:8px;padding:3px 9px;transform:rotate(-6deg);font-size:11.5px!important;letter-spacing:3px;}
-  .report-body{padding:22px 20px 20px;text-align:center;}
-  .report-avatar{width:78px;height:78px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:40px;background:linear-gradient(145deg,#FFF3E6,#FFE3C7);border:3px solid var(--line);box-shadow:0 10px 24px -8px rgba(244,88,30,.3);}
-  .report-rank{font-size:28px;font-weight:900;letter-spacing:2px;margin-top:12px;}
-  .report-tag{font-size:12px;color:var(--ink2);font-weight:700;margin-top:6px;}
-  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
-  .stat{background:#FFF7F0;border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;gap:3px;}
-  .stat span{font-size:10.5px;color:var(--ink3);font-weight:800;letter-spacing:1px;}
-  .stat b{font-size:20px;font-weight:900;line-height:1.2;}
-  .stat .small{font-size:14px;}
-  .rank-progress{margin-top:16px;text-align:left;}
-  .rp-top{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);font-weight:800;margin-bottom:7px;}
-  .rp-fill{background:linear-gradient(90deg,#FFB35C,#FF7A45);}
-  .report-actions{display:flex;gap:10px;margin-top:20px;}
-  .report-actions .btn-primary{flex:1;padding:15px 10px;font-size:16px;letter-spacing:1px;}
-  .report-actions .btn-secondary{flex:1;padding:14px 10px;font-size:14px;}
-  .report-home{margin-top:8px;width:100%;text-align:center;}
-  .toast{position:fixed;left:50%;top:12%;transform:translate(-50%,-10px);background:var(--card);border-radius:999px;padding:10px 20px;font-size:13.5px;font-weight:900;color:var(--ink);box-shadow:0 14px 30px -6px rgba(74,42,24,.28);opacity:0;pointer-events:none;transition:all .25s;z-index:90;white-space:nowrap;border:2px solid var(--line);}
-  .toast.show{opacity:1;transform:translate(-50%,0);}
-  .confetti{position:fixed;width:9px;height:14px;border-radius:3px;pointer-events:none;z-index:85;animation:confettiFly 1.1s ease-out forwards;}
-  @keyframes confettiFly{to{transform:translate(var(--dx),var(--dy)) rotate(340deg);opacity:0;}}
-  @media (max-width:380px){
-    .screen{padding:14px 12px 24px;gap:12px;}
-    .hero h1{font-size:28px;letter-spacing:3px;}
-    .best-value{font-size:32px;}
-    .feat{padding:13px 6px 12px;}
-    .grid{gap:8px;}
-    .food-btn{border-radius:18px;}
-  }
+:root{
+  --amber:#FF7A45; --amber2:#FFB35C; --amber3:#FFD9A0; --amber4:#FFE9C7;
+  --cream:#FFF6EA; --ink:#6B3A2A; --ink2:#9A6B4B; --line:#F3D9BC;
+  --card:#FFFDF8; --ok:#8CCDB0; --okd:#2E7D5F; --bad:#F2A08C; --badd:#C26048;
+  --r-lg:26px; --r-md:18px; --r-sm:13px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;position:fixed;inset:0;width:100%;overscroll-behavior:none;}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(120% 55% at 50% -8%, rgba(255,236,200,.95), rgba(255,236,200,0) 62%),
+    radial-gradient(80% 45% at 88% 108%, rgba(255,190,120,.5), rgba(255,190,120,0) 60%),
+    radial-gradient(80% 45% at 8% 106%, rgba(255,150,95,.42), rgba(255,150,95,0) 60%),
+    linear-gradient(168deg,#FFDCA8 0%,#FFB35C 46%,#FF8A52 100%);
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;
+}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;
+  padding:max(10px,env(safe-area-inset-top)) 14px max(10px,env(safe-area-inset-bottom));
+  z-index:1;}
+.screen.on{display:flex;animation:scrIn .26s ease;}
+@keyframes scrIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+button{font-family:inherit;cursor:pointer;border:none;}
+.card{background:linear-gradient(180deg,#FFFFFF 0%,#FFF3E0 100%);
+  border-radius:var(--r-md);border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 4px 0 rgba(205,115,50,.16),0 12px 24px rgba(150,70,20,.12),inset 0 2px 0 #FFFFFF;}
+.chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.85);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:800;}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  font-weight:900;color:#FFF;letter-spacing:.05em;border-radius:18px;
+  background:linear-gradient(180deg,var(--amber2) 0%,var(--amber) 100%);
+  box-shadow:0 5px 0 #C85B2B,0 10px 20px rgba(170,70,20,.28),
+    inset 0 2px 0 rgba(255,255,255,.55),inset 0 -8px 12px rgba(170,50,10,.18);
+  transition:transform .07s ease,box-shadow .07s ease,filter .2s;}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #C85B2B,inset 0 2px 0 rgba(255,255,255,.4);filter:brightness(1.03);}
+.btn.ghost{background:linear-gradient(180deg,#FFF8EC,#FFE9C9);color:var(--ink);
+  box-shadow:0 5px 0 #E0B98F,0 8px 16px rgba(150,70,20,.16),inset 0 2px 0 #FFF;}
+.btn.ghost:active{box-shadow:0 1px 0 #E0B98F,inset 0 2px 0 #FFF;}
+.btn.big{font-size:19px;border-radius:22px;padding:15px 18px;width:100%;}
+.btn.small{padding:10px 14px;font-size:14px;border-radius:14px;}
+.icon-btn{width:42px;height:42px;border-radius:14px;font-size:19px;display:inline-flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#FFF8EC,#FFE9C9);border:1px solid rgba(255,255,255,.8);
+  box-shadow:0 4px 0 #E0B98F,inset 0 2px 0 #FFF;transition:transform .07s,box-shadow .07s;}
+.icon-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #E0B98F,inset 0 2px 0 #FFF;}/* ===== 首页 ===== */
+.home-head{text-align:center;margin:2px 0 10px;position:relative;}
+.home-sound{position:absolute;right:0;top:-2px;width:38px;height:38px;}
+.title{font-size:clamp(24px,7.2vw,34px);font-weight:900;letter-spacing:.06em;color:#FFF;
+  text-shadow:0 2px 0 #E06A35,0 4px 0 rgba(160,60,15,.28),0 8px 16px rgba(160,60,15,.35);}
+.subtitle{font-size:clamp(11px,3.2vw,13px);color:#8A4E2E;font-weight:700;margin-top:6px;letter-spacing:.05em;}
+.stats-row{display:flex;gap:10px;margin-bottom:10px;}
+.stat-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 8px;border-radius:var(--r-md);}
+.stat-label{font-size:11px;font-weight:800;color:var(--ink2);}
+.stat-value{font-size:clamp(18px,5.4vw,24px);font-weight:900;color:var(--amber);text-shadow:0 1px 0 #FFF;}
+.rank-value{font-size:clamp(13px,4vw,17px);}
+.feature-row{display:flex;gap:8px;margin-bottom:10px;}
+.feat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:var(--r-sm);}
+.feat .fe-emoji{font-size:clamp(18px,5.6vw,24px);}
+.feat .fe-txt{font-size:10.5px;font-weight:800;color:var(--ink2);white-space:nowrap;}
+.level-panel{padding:10px 12px;margin-bottom:10px;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.panel-title{font-size:13px;font-weight:900;}
+.tiny{font-size:10.5px;font-weight:800;color:var(--ink2);}
+.level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:min(360px,92vw);margin:0 auto;}
+.level-chip{position:relative;aspect-ratio:1;border-radius:14px;font-weight:900;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:linear-gradient(180deg,#FFF,#FFEAD0);color:var(--ink);font-size:15px;
+  box-shadow:0 3px 0 #DDB27E,0 6px 10px rgba(150,70,20,.14),inset 0 1.5px 0 #FFF;
+  transition:transform .07s,box-shadow .07s;}
+.level-chip .lv-emoji{font-size:clamp(15px,4.6vw,20px);line-height:1;}
+.level-chip .lv-num{font-size:8.5px;font-weight:800;color:var(--ink2);line-height:1.2;}
+.level-chip.on{background:linear-gradient(180deg,var(--amber2),var(--amber));color:#FFF;
+  box-shadow:0 3px 0 #C85B2B,0 6px 10px rgba(170,70,20,.25),inset 0 1.5px 0 rgba(255,255,255,.5);}
+.level-chip.on .lv-num{color:#FFE9C7;}
+.level-chip.locked{background:linear-gradient(180deg,#F1E4D2,#EAD9C2);color:#C4A68B;box-shadow:0 3px 0 #D8C2A5;cursor:not-allowed;}
+.level-chip:active:not(.locked){transform:translateY(3px);box-shadow:0 0 0 #DDB27E,inset 0 1.5px 0 #FFF;}
+.level-chip.wrong{animation:shake .4s;}
+.start-wrap{margin-top:auto;}
+.foot-tip{margin-top:9px;text-align:center;font-size:10.5px;color:#8A4E2E;font-weight:700;}
+.guide-link{text-decoration:underline;cursor:pointer;}
+/* ===== 游戏主界面 ===== */
+.hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.hud-right{display:flex;gap:8px;}
+.bars{margin-bottom:8px;}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#8A4E2E;margin-bottom:3px;}
+.bar{height:12px;border-radius:999px;background:rgba(107,58,42,.14);overflow:hidden;
+  box-shadow:inset 0 2px 3px rgba(107,58,42,.18);}
+.bar>div{height:100%;width:100%;border-radius:999px;transition:width .2s ease;
+  background:linear-gradient(90deg,var(--amber2),var(--amber));}
+.bar.timer>div{background:linear-gradient(90deg,#FFCF7A,var(--amber));}
+.bar.timer>div.low{background:linear-gradient(90deg,var(--bad),#FFB35C);}
+.kpi-label{margin-top:6px;}
+.bar.kpi>div{background:linear-gradient(90deg,#9BD8BC,var(--ok));}
+.scoreline{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+.scoreline .score-label{font-size:12px;font-weight:800;color:var(--ink2);}
+.scoreline b{font-size:clamp(26px,8vw,38px);font-weight:900;color:#FFF;
+  text-shadow:0 2px 0 #E06A35,0 4px 0 rgba(160,60,15,.25);}
+.order-card{padding:10px 12px;margin-bottom:8px;}
+.order-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.customer{font-size:clamp(22px,7vw,30px);}
+.order-text{font-size:11px;font-weight:800;color:var(--ink2);}
+.order-items{display:flex;gap:8px;min-height:42px;align-items:center;flex-wrap:nowrap;overflow:hidden;}
+.order-chip{display:inline-flex;align-items:center;gap:5px;background:#FFF;border:2px dashed #FFC79A;
+  border-radius:14px;padding:6px 10px;font-size:14px;font-weight:900;color:var(--ink);
+  box-shadow:0 2px 0 rgba(205,115,50,.14),inset 0 1.5px 0 #FFF;white-space:nowrap;}
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,2.2vw,11px);margin-bottom:8px;}
+.food-btn{position:relative;border-radius:var(--r-md);font-weight:900;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FFEFDA 100%);
+  box-shadow:0 4px 0 #E0B98F,0 8px 14px rgba(150,70,20,.14),inset 0 2px 0 #FFF;
+  transition:transform .07s,box-shadow .07s;}
+.food-btn .f-emoji{font-size:clamp(22px,8vw,34px);line-height:1;}
+.food-btn .f-name{font-size:clamp(9px,3vw,12px);font-weight:800;color:var(--ink2);}
+.food-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #E0B98F,inset 0 2px 0 #FFF;}
+.food-btn.picked{background:linear-gradient(180deg,#FFF3D6,#FFE3AE);box-shadow:0 4px 0 #E8B45E,inset 0 2px 0 #FFF,0 0 0 3px rgba(255,179,92,.35);}
+.food-btn.picked .f-emoji{animation:pick .25s ease;}
+@keyframes pick{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.food-btn.wrong{animation:shake .4s;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.tray-row{display:flex;gap:10px;align-items:stretch;}
+.tray{flex:1;display:flex;gap:8px;padding:9px 10px;min-height:54px;border-radius:16px;}
+.tray-slot{flex:1;border:2px dashed #EAC7A0;border-radius:12px;background:rgba(255,255,255,.55);
+  display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,28px);min-height:34px;}
+.tray-slot.fill{border-style:solid;border-color:#FFC79A;background:#FFF;box-shadow:0 2px 0 rgba(205,115,50,.12);}
+.tray.bad{animation:shake .4s;}
+.tray-row .btn.small{align-self:center;}
+/* ===== 弹窗 ===== */
+.overlay{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+  padding:22px;background:rgba(107,58,42,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
+.overlay.show{display:flex;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{width:min(340px,92vw);max-height:92%;overflow-y:auto;background:linear-gradient(180deg,#FFFEFB,#FFF3E0);
+  border-radius:26px;padding:20px 18px 18px;text-align:center;
+  box-shadow:0 8px 0 rgba(190,95,40,.22),0 24px 48px rgba(120,50,10,.3),inset 0 2px 0 #FFF;
+  animation:bounceIn .34s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.7) translateY(24px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.modal-emoji{font-size:44px;margin-bottom:6px;}
+.modal-title{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:.04em;}
+.modal-sub{font-size:12px;font-weight:700;color:var(--ink2);margin-top:4px;}
+.kv{display:flex;justify-content:space-between;align-items:center;background:#FFF;border-radius:14px;
+  padding:9px 12px;margin-top:8px;font-size:13px;font-weight:800;color:var(--ink2);
+  box-shadow:inset 0 1.5px 0 rgba(205,115,50,.08),0 1px 0 rgba(255,255,255,.8);}
+.kv b{color:var(--amber);font-size:16px;font-weight:900;}
+.modal-btns{display:flex;gap:10px;margin-top:14px;}
+.modal-btns .btn{flex:1;}
+.report-rank{font-size:19px;font-weight:900;color:var(--amber);text-shadow:0 1px 0 #FFF;margin-top:6px;}
+.progress{height:12px;border-radius:999px;background:rgba(107,58,42,.12);overflow:hidden;margin-top:8px;box-shadow:inset 0 2px 3px rgba(107,58,42,.15);}
+.progress>div{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--amber2),var(--amber));transition:width .4s ease;}
+.guide-text{font-size:12px;color:var(--ink2);font-weight:700;line-height:1.6;text-align:left;margin-top:8px;
+  background:#FFF;border-radius:12px;padding:8px 10px;box-shadow:inset 0 1px 0 rgba(205,115,50,.06);}
+#toast{position:absolute;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-140%);
+  z-index:90;background:rgba(107,58,42,.92);color:#FFF;font-size:13px;font-weight:800;padding:9px 16px;
+  border-radius:999px;transition:transform .3s ease;box-shadow:0 8px 20px rgba(0,0,0,.2);pointer-events:none;max-width:86vw;text-align:center;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+@media (max-height:620px){
+  .home-head{margin-bottom:6px;}
+  .stats-row,.feature-row,.level-panel{margin-bottom:6px;}
+  .level-panel{padding:8px 10px;}
+  .level-grid{gap:6px;}
+  .order-card{padding:8px 10px;}
+  .grid{gap:6px;margin-bottom:6px;}
+  .tray{min-height:46px;padding:7px 8px;}
+  .hud{margin-bottom:6px;}
+  .bars{margin-bottom:6px;}
+}
 </style>
-</head>
-<body>
-<div class="blob a"></div>
-<div class="blob b"></div>
-<div class="blob c"></div>
-<div class="bg-emojis"><span>🍜</span><span>🍢</span><span>🍰</span><span>🧋</span><span>🍔</span><span>🍣</span></div>
-
-<main id="screenHome" class="screen home">
-  <button id="soundBtnHome" class="icon-btn sound-btn sound-icon" title="音效开关">🔊</button>
-  <div class="hero">
-    <div class="logo-badge">🍳</div>
-    <h1>爆忙！<span class="g-text">一人食堂</span></h1>
-    <p class="sub">一个人，也要把整间食堂经营得热气腾腾</p>
-  </div>
-
-  <div class="best-card card">
-    <div>
-      <div class="best-label">🏆 历史最高分</div>
-      <div class="best-value g-text" id="bestScore">0</div>
-    </div>
-    <div class="best-rank" id="bestRank">🌱 见习店员</div>
-  </div>
-
-  <div class="features">
-    <div class="feat card">
-      <div class="feat-ic ic-1">👀</div>
-      <b>看准订单</b>
-      <span>读懂顾客需求</span>
-    </div>
-    <div class="feat card">
-      <div class="feat-ic ic-2">🍳</div>
-      <b>连消上菜</b>
-      <span>凑齐组合秒出餐</span>
-    </div>
-    <div class="feat card">
-      <div class="feat-ic ic-3">📸</div>
-      <b>晒出战报</b>
-      <span>生成营业战报</span>
-    </div>
-  </div>
-
-  <div class="guide card">
-    <div class="guide-title">📖 新店长上岗指南</div>
-    <ol>
-      <li><span class="step">1</span>顾客想吃什么，发光的格子就是答案，点齐组合自动上菜</li>
-      <li><span class="step">2</span>每关在限定时间内达成 KPI 才能晋级，越到后面越魔鬼</li>
-      <li><span class="step">3</span>点错会清空托盘，稳住手速，更稳住心态</li>
-    </ol>
-  </div>
-
-  <div class="start-wrap">
-    <button id="startBtn" class="btn-primary">🛎️ 开始营业</button>
-    <p class="micro">无需登录 · 离线可玩</p>
-  </div>
-</main><!-- ======== 游戏界面 ======== -->
-<main id="screenGame" class="screen game-screen hidden">
-  <header class="hud">
-    <div class="kpi-card card">
-      <div class="kpi-top">
-        <span class="level-chip" id="levelChip">第 1/10 关 · 新手试业</span>
-        <span class="kpi-text" id="kpiText">KPI 0/15</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" id="kpiFill"></div></div>
-    </div>
-    <div class="hud-actions" style="display:flex;gap:8px;">
-      <button id="soundBtnGame" class="icon-btn sound-icon" title="音效开关">🔊</button>
-      <button id="pauseBtn" class="icon-btn" title="暂停">⏸️</button>
-    </div>
+</head><body>
+<!-- ===== 首页 ===== -->
+<div id="screenHome" class="screen on">
+  <header class="home-head">
+    <button id="soundBtnHome" class="icon-btn home-sound" aria-label="音效开关">🔊</button>
+    <h1 class="title">🍳 爆忙！一人食堂</h1>
+    <p class="subtitle">一个人，也要把整间食堂经营得热气腾腾</p>
   </header>
-
-  <div class="row2">
-    <div class="score-card card">
-      <span class="label">🍭 得分</span>
-      <div class="score-value g-text" id="score">0</div>
+  <div class="stats-row">
+    <div class="card stat-card">
+      <span class="stat-label">🏆 历史最高分</span>
+      <b class="stat-value" id="bestScore">0</b>
     </div>
-    <div class="timer-card card">
-      <span class="label">⏱️ 营业倒计时</span>
-      <div class="timer-row">
-        <div class="timer-value" id="time">60s</div>
-        <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
-      </div>
+    <div class="card stat-card">
+      <span class="stat-label">💪 当前段位</span>
+      <b class="stat-value rank-value" id="bestRank">见习店员</b>
     </div>
   </div>
-
-  <section class="order-area card" id="orderArea">
-    <div class="order-head">
-      <div class="customer" id="customer">👧</div>
-      <div>
-        <div class="order-title">🛎️ 新订单来啦！</div>
-        <div class="order-sub">顾客想吃…</div>
-      </div>
+  <div class="feature-row">
+    <div class="card feat"><span class="fe-emoji">👀</span><span class="fe-txt">看准订单</span></div>
+    <div class="card feat"><span class="fe-emoji">🔗</span><span class="fe-txt">连消上菜</span></div>
+    <div class="card feat"><span class="fe-emoji">📸</span><span class="fe-txt">晒出战报</span></div>
+  </div>
+  <section class="card level-panel">
+    <div class="panel-head">
+      <span class="panel-title">🗺️ 关卡选择</span>
+      <span class="tiny" id="unlockTip">已解锁 1 关</span>
     </div>
-    <div class="order-items" id="orderItems"></div>
+    <div id="levelGrid" class="level-grid"></div>
   </section>
-
-  <section class="grid" id="grid"></section>
-
-  <div class="tray">
-    <div class="tray-items" id="tray">👐 你的托盘是空的</div>
-    <button class="clear-btn" id="clearBtn">🗑️ 清空</button>
-  </div>
-  <p class="hint-text">💡 按订单点餐，凑齐组合自动上菜；点错会清空托盘哦～</p>
-</main>
-
-<!-- ======== 关卡开场 ======== -->
-<div id="levelIntro" class="overlay light">
-  <div class="panel intro-card">
-    <div class="intro-emoji" id="introEmoji">🍳</div>
-    <div class="intro-title g-text" id="introTitle">第 1 关</div>
-    <div class="intro-name" id="introName">新手试业</div>
-    <div class="intro-kpi">本关 KPI：<b id="introKpi">15</b> 分</div>
-    <div class="intro-time">营业时间 <b id="introTime">60</b> 秒</div>
+  <div class="start-wrap">
+    <button id="startBtn" class="btn big">🛎️ 开始营业</button>
+    <p class="foot-tip">无需登录 · 离线可玩　·　<span class="guide-link" id="guideLink">📖 新手指南</span></p>
   </div>
 </div>
 
-<!-- ======== 暂停 ======== -->
-<div id="pauseOverlay" class="overlay">
-  <div class="panel pause-card">
-    <div class="pause-emoji">☕</div>
-    <h2>营业暂停中</h2>
-    <p>休息一下，回来继续战斗</p>
-    <button id="resumeBtn" class="btn-primary">▶️ 继续营业</button>
-    <button id="quitBtn" class="btn-ghost">🏠 返回首页</button>
+<!-- ===== 游戏主界面 ===== -->
+<div id="screenGame" class="screen">
+  <div class="hud">
+    <span id="levelChip" class="chip">第 1 关 · 新手试业</span>
+    <span class="hud-right">
+      <button id="soundBtnGame" class="icon-btn" aria-label="音效开关">🔊</button>
+      <button id="pauseBtn" class="icon-btn" aria-label="暂停">⏸️</button>
+    </span>
+  </div>
+  <div class="bars">
+    <div class="bar-label"><span>⏱️ 营业时间</span><b id="time">60s</b></div>
+    <div class="bar timer"><div id="timerFill"></div></div>
+    <div class="bar-label kpi-label"><span>🎯 今日 KPI</span><b id="kpiText">0 / 15</b></div>
+    <div class="bar kpi"><div id="kpiFill"></div></div>
+  </div>
+  <div class="scoreline"><span class="score-label">🍽️ 得分</span><b id="score">0</b></div>
+  <section class="card order-card">
+    <div class="order-head">
+      <span class="customer" id="customer">🧑‍🍳</span>
+      <span class="order-text" id="orderText">这位顾客要点：</span>
+    </div>
+    <div id="orderItems" class="order-items"></div>
+  </section>
+  <div id="grid" class="grid"></div>
+  <div class="tray-row">
+    <div id="tray" class="card tray"></div>
+    <button id="clearBtn" class="btn small ghost">🗑️ 清空</button>
   </div>
 </div>
 
-<!-- ======== 营业战报 ======== -->
+<!-- ===== 关卡开场 ===== -->
+<div id="introModal" class="overlay">
+  <div class="modal">
+    <div class="modal-emoji" id="introEmoji">🌅</div>
+    <div class="modal-title" id="introTitle">第 1 关</div>
+    <div class="modal-sub" id="introName">新手试业</div>
+    <div class="kv"><span>🎯 关卡 KPI</span><b id="introKpi">15 分</b></div>
+    <div class="kv"><span>⏱️ 营业时间</span><b id="introTime">60 秒</b></div>
+    <div class="modal-btns"><button id="introGoBtn" class="btn">🔥 开工！</button></div>
+  </div>
+</div>
+
+<!-- ===== 暂停 ===== -->
+<div id="pauseModal" class="overlay">
+  <div class="modal">
+    <div class="modal-emoji">☕</div>
+    <div class="modal-title">短暂休息一下</div>
+    <div class="modal-sub">休息时订单不会逃跑哦</div>
+    <div class="modal-btns">
+      <button id="resumeBtn" class="btn">▶️ 继续营业</button>
+      <button id="restartBtn" class="btn ghost">🔄 重开本关</button>
+    </div>
+    <div class="modal-btns"><button id="quitBtn" class="btn ghost">🏠 返回主页</button></div>
+  </div>
+</div>
+
+<!-- ===== 通关结算 ===== -->
+<div id="clearModal" class="overlay">
+  <div class="modal">
+    <div class="modal-emoji">🎉</div>
+    <div class="modal-title" id="clearTitle">第 1 关 · 达成 KPI！</div>
+    <div class="kv"><span>🧾 本关得分</span><b id="clearScore">0</b></div>
+    <div class="kv"><span>🎯 目标 KPI</span><b id="clearKpi">15</b></div>
+    <div class="kv"><span>⏱️ 用时</span><b id="clearTime">0s</b></div>
+    <div class="modal-btns">
+      <button id="clearHomeBtn" class="btn ghost">🏠 返回主页</button>
+      <button id="clearNextBtn" class="btn">▶️ 进入下一关</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 失败结算 ===== -->
+<div id="failModal" class="overlay">
+  <div class="modal">
+    <div class="modal-emoji">💦</div>
+    <div class="modal-title">打烊时间到！</div>
+    <div class="modal-sub">差一点点就够 KPI 了…</div>
+    <div class="kv"><span>🧾 本关得分</span><b id="failScore">0</b></div>
+    <div class="kv"><span>🎯 目标 KPI</span><b id="failKpi">15</b></div>
+    <div class="modal-btns">
+      <button id="failHomeBtn" class="btn ghost">🏠 返回主页</button>
+      <button id="failRetryBtn" class="btn">🔁 再试一次</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 最终战报 ===== -->
 <div id="reportModal" class="overlay">
-  <div class="panel report-card">
-    <div class="report-head">
-      <span id="reportDate">8月28日 · 营业战报</span>
-      <span class="report-stamp">已打烊</span>
+  <div class="modal">
+    <div class="modal-emoji">🏆</div>
+    <div class="modal-title">营业战报</div>
+    <div class="modal-sub" id="reportDate">今日营业</div>
+    <div class="report-rank" id="reportRank">💪 熟练店员</div>
+    <div class="kv"><span>💰 营业收入总分</span><b id="reportIncome">0</b></div>
+    <div class="kv"><span>🏅 历史最高分</span><b id="reportBest">0</b></div>
+    <div class="kv"><span>🗺️ 营业进度</span><b id="reportLevel">全通 10 关</b></div>
+    <div class="kv"><span>⏱️ 打烊时间</span><b id="reportTime">00:00</b></div>
+    <div class="progress"><div id="rpFill" style="width:100%"></div></div>
+    <div class="modal-btns">
+      <button id="homeBtn" class="btn ghost">🏠 返回主页</button>
+      <button id="replayBtn" class="btn">🔁 再开一局</button>
     </div>
-    <div class="report-body">
-      <div class="report-avatar" id="reportAvatar">🍳</div>
-      <div class="report-rank g-text" id="reportRank">资深主厨</div>
-      <div class="report-tag" id="reportTag">今天也是元气满满的一天！</div>
-      <div class="stats">
-        <div class="stat"><span>营业收入总分</span><b id="reportIncome">0</b></div>
-        <div class="stat"><span>历史最高分</span><b id="reportBest">0</b></div>
-        <div class="stat"><span>达成关卡</span><b class="small" id="reportLevel">第 1 关</b></div>
-        <div class="stat"><span>打烊时间</span><b class="small" id="reportTime">20:47</b></div>
-      </div>
-      <div class="rank-progress">
-        <div class="rp-top"><span id="rpText">距下一段位还差 0 分</span><span id="rpPct">0%</span></div>
-        <div class="bar-track"><div class="bar-fill rp-fill" id="rpFill"></div></div>
-      </div>
-      <div class="report-actions">
-        <button id="replayBtn" class="btn-primary">🔁 再开一局</button>
-        <button id="saveBtn" class="btn-secondary">📸 保存战报</button>
-      </div>
-      <button id="homeBtn" class="btn-ghost small report-home">🏠 返回首页</button>
-    </div>
+    <div class="modal-btns"><button id="saveBtn" class="btn ghost">📸 保存战报</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ===== 新手指南 ===== -->
+<div id="guideModal" class="overlay">
+  <div class="modal">
+    <div class="modal-emoji">📖</div>
+    <div class="modal-title">新店长上岗指南</div>
+    <div class="guide-text">👀 <b>看准订单</b>：看清顾客要什么，把对应食材依次放入托盘。</div>
+    <div class="guide-text">🔗 <b>连消上菜</b>：配齐一单自动 +1 分，点错或超额会震动并清空托盘。</div>
+    <div class="guide-text">🗺️ <b>逐关挑战</b>：KPI 达成即可手动进入下一关，随时可回主页。</div>
+    <div class="modal-btns"><button id="guideClose" class="btn">👌 知道了</button></div>
+  </div>
+</div>
 
-<script>
-(function(){
-'use strict';
-
-var LEVELS = [
-  { name:'新手试业', kpi:15, time:60 },
-  { name:'小店迎客', kpi:17, time:60 },
-  { name:'渐入佳境', kpi:19, time:58 },
-  { name:'熟能生巧', kpi:20, time:58 },
-  { name:'效率之星', kpi:21, time:56 },
-  { name:'得心应手', kpi:22, time:56 },
-  { name:'金牌店员', kpi:23, time:54 },
-  { name:'独当一面', kpi:24, time:54 },
-  { name:'王牌主厨', kpi:25, time:52 },
-  { name:'魔鬼经理', kpi:27, time:52 }
-];
-var RANKS = [
-  { min:160, name:'五星主厨', icon:'👑' },
-  { min:120, name:'金牌店长', icon:'🏆' },
-  { min:80,  name:'王牌主厨', icon:'🔥' },
-  { min:50,  name:'资深主厨', icon:'🍳' },
-  { min:25,  name:'熟练店员', icon:'💪' },
-  { min:0,   name:'见习店员', icon:'🌱' }
-];
-var FOODS = [
-  { id:'burger',   emoji:'🍔', name:'汉堡' },
-  { id:'sushi',    emoji:'🍣', name:'寿司' },
-  { id:'ramen',    emoji:'🍜', name:'拉面' },
-  { id:'cake',     emoji:'🍰', name:'甜点' },
-  { id:'milktea',  emoji:'🧋', name:'奶茶' },
-  { id:'skewer',   emoji:'🍢', name:'烤串' },
-  { id:'dumpling', emoji:'🥟', name:'饺子' },
-  { id:'icecream', emoji:'🍦', name:'冰淇淋' },
-  { id:'pancake',  emoji:'🥞', name:'松饼' }
-];
-var CUSTOMERS = ['👧','🧒','👦','👩','🧑','👨','👵','👴','🧑‍🍳'];
-
+<div id="toast"></div>
+<script>'use strict';
+/* ===== 工具 ===== */
 function $(id){ return document.getElementById(id); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function vibrate(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+function pad2(n){ return (n<10?'0':'')+n; }
+function nowHM(){ var d=new Date(); return pad2(d.getHours())+':'+pad2(d.getMinutes()); }
+function shakeEl(el){ if(!el) return; el.classList.add('wrong'); setTimeout(function(){ el.classList.remove('wrong'); },450); }
 
-var els = {
-  screenHome: $('screenHome'), screenGame: $('screenGame'),
-  bestScore: $('bestScore'), bestRank: $('bestRank'),
-  startBtn: $('startBtn'),
-  levelChip: $('levelChip'), kpiText: $('kpiText'), kpiFill: $('kpiFill'),
-  score: $('score'), time: $('time'), timerFill: $('timerFill'),
-  orderArea: $('orderArea'), orderItems: $('orderItems'), customer: $('customer'),
-  grid: $('grid'), tray: $('tray'), clearBtn: $('clearBtn'),
-  pauseBtn: $('pauseBtn'), pauseOverlay: $('pauseOverlay'), resumeBtn: $('resumeBtn'), quitBtn: $('quitBtn'),
-  levelIntro: $('levelIntro'), introEmoji: $('introEmoji'), introTitle: $('introTitle'),
-  introName: $('introName'), introKpi: $('introKpi'), introTime: $('introTime'),
-  reportModal: $('reportModal'), reportDate: $('reportDate'), reportAvatar: $('reportAvatar'),
-  reportRank: $('reportRank'), reportTag: $('reportTag'), reportIncome: $('reportIncome'),
-  reportBest: $('reportBest'), reportLevel: $('reportLevel'), reportTime: $('reportTime'),
-  rpText: $('rpText'), rpPct: $('rpPct'), rpFill: $('rpFill'),
-  replayBtn: $('replayBtn'), saveBtn: $('saveBtn'), homeBtn: $('homeBtn'),
-  toast: $('toast')
+/* ===== 数据 ===== */
+var FOODS=[
+ {e:'🍔',n:'汉堡'},{e:'🍣',n:'寿司'},{e:'🍜',n:'拉面'},{e:'🍰',n:'甜点'},
+ {e:'🧋',n:'奶茶'},{e:'🍢',n:'烤串'},{e:'🥟',n:'饺子'},{e:'🍦',n:'冰淇淋'},{e:'🥞',n:'松饼'}
+];
+var CUSTOMERS=['🧑‍🍳','👩‍🍳','👨‍🍳','🧑','👩','👨','👧','👦','🧓','👵'];
+var LEVELS=[
+ {name:'新手试业',kpi:15,time:60,emoji:'🌅'},
+ {name:'家常便饭',kpi:16,time:59,emoji:'🍲'},
+ {name:'小有名气',kpi:17,time:58,emoji:'✨'},
+ {name:'人气食堂',kpi:18,time:57,emoji:'🔥'},
+ {name:'街坊最爱',kpi:19,time:56,emoji:'🏘️'},
+ {name:'爆单预警',kpi:21,time:55,emoji:'📈'},
+ {name:'高峰时段',kpi:23,time:54,emoji:'⏰'},
+ {name:'掌勺新秀',kpi:24,time:53,emoji:'👨‍🍳'},
+ {name:'星级主厨',kpi:26,time:53,emoji:'⭐'},
+ {name:'魔鬼经理',kpi:27,time:52,emoji:'👹'}
+];
+var RANKS=[
+ {min:0,icon:'🍳',name:'见习店员'},
+ {min:25,icon:'💪',name:'熟练店员'},
+ {min:50,icon:'👨‍🍳',name:'资深主厨'},
+ {min:80,icon:'🔥',name:'王牌主厨'},
+ {min:120,icon:'👑',name:'金牌店长'},
+ {min:160,icon:'⭐',name:'五星主厨'}
+];
+var K={best:'canteen_best',sound:'canteen_sound',unlock:'canteen_unlock',per:'canteen_per',reports:'canteen_reports'};
+var store={
+ get:function(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+ set:function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 };
 
-var store = {
-  get: function(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
-  set: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
-};
+/* ===== 状态 ===== */
+var best=Number(store.get(K.best,0))||0;
+var unlock=Math.min(Math.max(Number(store.get(K.unlock,0))||0,0),LEVELS.length-1);
+var perBest=store.get(K.per,{});
+var sound=store.get(K.sound,true)!==false;
+var S={ level:0,score:0,runTotal:0,timeLeft:0,timer:null,tray:[],order:[],lock:true,running:false,paused:false,used:0,curCustomer:0 };
 
-var best = Number(store.get('canteen_best',0)) || 0;
-var sound = store.get('canteen_sound', true) !== false;
+var els={};
+['screenHome','soundBtnHome','bestScore','bestRank','startBtn','levelGrid','unlockTip','guideLink',
+ 'screenGame','levelChip','soundBtnGame','pauseBtn','time','timerFill','kpiText','kpiFill','score',
+ 'customer','orderText','orderItems','grid','tray','clearBtn',
+ 'introModal','introEmoji','introTitle','introName','introKpi','introTime','introGoBtn',
+ 'pauseModal','resumeBtn','restartBtn','quitBtn',
+ 'clearModal','clearTitle','clearScore','clearKpi','clearTime','clearHomeBtn','clearNextBtn',
+ 'failModal','failScore','failKpi','failHomeBtn','failRetryBtn',
+ 'reportModal','reportDate','reportRank','reportIncome','reportBest','reportLevel','reportTime','rpFill','replayBtn','saveBtn','homeBtn',
+ 'guideModal','guideClose','toast'].forEach(function(id){ els[id]=$(id); });
 
-var S = {
-  screen:'home', level:0, score:0, levelScore:0, timeLeft:0,
-  order:[], selected:[],
-  running:false, paused:false, lock:false,
-  timerId:null, runStart:0, latest:null
-};
-var toastTimer=null, introTimer=null;
-
-function shuffle(arr){
-  var a=arr.slice();
-  for(var i=a.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var t=a[i]; a[i]=a[j]; a[j]=t;
+/* ===== 音效（Web Audio 合成） ===== */
+var actx=null;
+function tone(f,dur,type,vol,delay){
+  if(!sound) return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended') actx.resume();
+    var t0=actx.currentTime+(delay||0);
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t0);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.linearRampToValueAtTime(vol||0.14,t0+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t0); o.stop(t0+dur+0.06);
+  }catch(e){}
+}
+function sfxClick(){ tone(680,0.07,'triangle',0.1); }
+function sfxAdd(){ tone(540,0.06,'triangle',0.12); tone(700,0.06,'sine',0.06,0.04); }
+function sfxSuccess(){ [660,880,1175].forEach(function(f,i){ tone(f,0.11,'triangle',0.13,i*0.07); }); }
+function sfxClear(){ [880,660].forEach(function(f,i){ tone(f,0.09,'triangle',0.11,i*0.06); }); }
+function sfxFail(){ tone(220,0.18,'sawtooth',0.09); tone(150,0.22,'sawtooth',0.09,0.1); }
+function sfxLose(){ [392,330,262].forEach(function(f,i){ tone(f,0.16,'triangle',0.12,i*0.14); }); }
+function sfxWin(){ [523,659,784,1047,1319].forEach(function(f,i){ tone(f,0.15,'triangle',0.13,i*0.1); }); }
+function sfxUnlock(){ [523,784,1047].forEach(function(f,i){ tone(f,0.12,'triangle',0.12,i*0.08); }); }/* ===== 渲染 ===== */
+function rankOf(total){ for(var i=RANKS.length-1;i>=0;i--){ if(total>=RANKS[i].min) return RANKS[i]; } return RANKS[0]; }
+function refreshHome(){
+  var rk=rankOf(best);
+  els.bestScore.textContent=best;
+  els.bestRank.textContent=rk.icon+' '+rk.name;
+  els.unlockTip.textContent='已解锁 '+(unlock+1)+' / '+LEVELS.length+' 关';
+  renderLevels();
+  renderSoundBtns();
+}
+function renderLevels(){
+  var html='';
+  for(var i=0;i<LEVELS.length;i++){
+    var lv=LEVELS[i],on=i<=unlock,locked=!on;
+    html+='<button class="level-chip'+(on?' on':' locked')+'" data-i="'+i+'">'
+      +'<span class="lv-emoji">'+(locked?'🔒':lv.emoji)+'</span>'
+      +'<span class="lv-num">'+(i+1)+' 关 · '+lv.kpi+'分</span></button>';
   }
-  return a;
+  els.levelGrid.innerHTML=html;
+  Array.prototype.forEach.call(els.levelGrid.children,function(btn){
+    btn.addEventListener('click',function(){
+      var i=Number(btn.getAttribute('data-i'));
+      if(i>unlock){ sfxFail(); vibrate(80); toast('先完成第 '+(unlock+1)+' 关解锁哦'); shakeEl(btn); return; }
+      sfxClick(); S.runTotal=0; startLevel(i,true);
+    });
+  });
 }
-function rankOf(total){
-  for(var i=0;i<RANKS.length;i++){ if(total>=RANKS[i].min) return RANKS[i]; }
-  return RANKS[RANKS.length-1];
+function renderSoundBtns(){ var t=sound?'🔊':'🔇'; els.soundBtnHome.textContent=t; els.soundBtnGame.textContent=t; }
+function toggleSound(){ sound=!sound; store.set(K.sound,sound); renderSoundBtns(); if(sound) sfxSuccess(); }
+function iconOf(name){ for(var i=0;i<FOODS.length;i++) if(FOODS[i].n===name) return FOODS[i].e; return ''; }
+function buildGrid(){
+  var html='';
+  for(var i=0;i<FOODS.length;i++){
+    html+='<button class="food-btn" data-i="'+i+'"><span class="f-emoji">'+FOODS[i].e+'</span><span class="f-name">'+FOODS[i].n+'</span></button>';
+  }
+  els.grid.innerHTML=html;
+  Array.prototype.forEach.call(els.grid.children,function(btn){
+    btn.addEventListener('click',function(){ clickFood(Number(btn.getAttribute('data-i')),btn); });
+  });
 }
-function rankProgress(total){
-  var cur=rankOf(total), idx=-1;
-  for(var i=0;i<RANKS.length;i++){ if(RANKS[i]===cur){ idx=i; break; } }
-  var next=idx>0?RANKS[idx-1]:null;
-  if(!next) return { text:'已是最高段位「'+cur.name+'」', pct:100 };
-  var pct=Math.max(0,Math.min(100,((total-cur.min)/(next.min-cur.min))*100));
-  return { text:'距「'+next.name+'」还差 '+(next.min-total)+' 分', pct:Math.round(pct) };
+function renderOrder(){
+  els.customer.textContent=CUSTOMERS[S.curCustomer];
+  var html='';
+  S.order.forEach(function(name){
+    var f=null;
+    for(var i=0;i<FOODS.length;i++) if(FOODS[i].n===name) f=FOODS[i];
+    html+='<span class="order-chip">'+f.e+' '+name+'</span>';
+  });
+  els.orderItems.innerHTML=html;
 }
-function pad(n){ return n<10?'0'+n:''+n; }
-function nowClock(){ var d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
-function nowDate(){ var d=new Date(); return (d.getMonth()+1)+'月'+d.getDate()+'日'; }
-function showToast(msg){
+function renderTray(){
+  var html='';
+  for(var i=0;i<3;i++){
+    var it=S.tray[i];
+    html+='<span class="tray-slot'+(it?' fill':'')+'">'+(it?iconOf(it):'')+'</span>';
+  }
+  els.tray.innerHTML=html;
+}
+function clearPicked(){ Array.prototype.forEach.call(els.grid.children,function(b){ b.classList.remove('picked','wrong'); }); }
+function newOrder(){
+  var need=S.level>=6?3:(S.level>=3?(Math.random()<0.5?3:2):(Math.random()<0.3?3:2));
+  var pool=shuffle(FOODS.slice());
+  S.order=pool.slice(0,Math.min(3,need)).map(function(f){return f.n;});
+  S.curCustomer=Math.floor(Math.random()*CUSTOMERS.length);
+  S.tray=[]; renderOrder(); renderTray(); clearPicked();
+}
+
+/* ===== 流程 ===== */
+function showScreen(name){
+  els.screenHome.classList.toggle('on',name==='home');
+  els.screenGame.classList.toggle('on',name==='game');
+}
+function showModal(name){ els[name+'Modal'].classList.add('show'); }
+function hideModal(name){ els[name+'Modal'].classList.remove('show'); }
+function hideAllModals(){ ['intro','pause','clear','fail','report','guide'].forEach(function(n){ els[n+'Modal'].classList.remove('show'); }); }
+function goHome(){
+  stopTimer(); S.running=false; S.lock=true; S.paused=false;
+  hideAllModals(); showScreen('home'); refreshHome();
+}
+function startLevel(i,resetRun){
+  stopTimer();
+  S.level=i; S.score=0; S.timeLeft=LEVELS[i].time; S.used=0; S.tray=[]; S.order=[]; S.paused=false; S.lock=true; S.running=false;
+  if(resetRun) S.runTotal=0;
+  showScreen('game');
+  els.levelChip.textContent='第 '+(i+1)+' / '+LEVELS.length+' 关 · '+LEVELS[i].name;
+  els.introEmoji.textContent=LEVELS[i].emoji;
+  els.introTitle.textContent='第 '+(i+1)+' 关';
+  els.introName.textContent=LEVELS[i].name+(i===unlock?' · 新解锁':'');
+  els.introKpi.textContent=LEVELS[i].kpi+' 分';
+  els.introTime.textContent=LEVELS[i].time+' 秒';
+  newOrder(); updateHUD(); showModal('intro');
+}
+function stopTimer(){ if(S.timer){ clearInterval(S.timer); S.timer=null; } }
+function startTimer(){
+  stopTimer(); S.running=true;
+  S.timer=setInterval(function(){
+    if(S.paused||!S.running) return;
+    S.timeLeft--; S.used++;
+    if(S.timeLeft<=0){
+      S.timeLeft=0; updateTimer(); stopTimer(); S.running=false; levelFail(); return;
+    }
+    updateTimer();
+  },1000);
+}
+function updateTimer(){
+  var lv=LEVELS[S.level];
+  var pct=Math.max(0,S.timeLeft/lv.time*100);
+  els.time.textContent=S.timeLeft+'s';
+  els.timerFill.style.width=pct+'%';
+  els.timerFill.classList.toggle('low',S.timeLeft<=10);
+}
+function updateHUD(){
+  var lv=LEVELS[S.level];
+  els.score.textContent=S.score;
+  els.kpiText.textContent=S.score+' / '+lv.kpi;
+  els.kpiFill.style.width=Math.min(100,S.score/lv.kpi*100)+'%';
+  updateTimer();
+}/* ===== 玩法 ===== */
+function clickFood(i,btn){
+  if(S.lock||S.paused||!S.running) return;
+  sfxClick();
+  var name=FOODS[i].n;
+  var need=S.order.filter(function(x){return x===name;}).length;
+  var have=S.tray.filter(function(x){return x===name;}).length;
+  if(need===0||have>=need||S.tray.length>=3){ punish(btn); return; }
+  S.tray.push(name);
+  btn.classList.add('picked');
+  sfxAdd(); vibrate(10); renderTray();
+  var ok=S.order.every(function(it){
+    return S.tray.filter(function(x){return x===it;}).length>=S.order.filter(function(y){return y===it;}).length;
+  });
+  if(ok){
+    S.score++;
+    sfxSuccess();
+    if(S.score>=LEVELS[S.level].kpi){ levelClear(); } else { newOrder(); updateHUD(); }
+  }
+}
+function punish(btn){
+  sfxFail(); vibrate(160);
+  S.tray=[]; renderTray(); clearPicked();
+  shakeEl(btn); els.tray.classList.add('bad');
+  setTimeout(function(){ els.tray.classList.remove('bad'); },450);
+  toast('点错啦！托盘已清空 💦');
+}
+function clearTray(){
+  if(S.lock||S.paused||!S.running) return;
+  if(!S.tray.length){ toast('托盘是空的哦'); return; }
+  sfxClear(); S.tray=[]; renderTray(); clearPicked();
+}
+function saveBest(score){
+  if(score>best){ best=score; store.set(K.best,best); }
+  if(!perBest[S.level]||score>perBest[S.level]){ perBest[S.level]=score; store.set(K.per,perBest); }
+}
+function levelClear(){
+  stopTimer(); S.running=false; S.lock=true;
+  var lv=LEVELS[S.level];
+  S.runTotal+=S.score;
+  saveBest(S.score);
+  var newUnlock=Math.min(S.level+1,LEVELS.length-1);
+  if(newUnlock>unlock){ unlock=newUnlock; store.set(K.unlock,unlock); }
+  sfxWin();
+  els.clearTitle.textContent='🎉 第 '+(S.level+1)+' 关 · 达成 KPI！';
+  els.clearScore.textContent=S.score+' 分';
+  els.clearKpi.textContent=lv.kpi+' 分';
+  els.clearTime.textContent=(lv.time-S.timeLeft)+'s';
+  refreshHome();
+  if(S.level>=LEVELS.length-1){ showFinalReport(); return; }
+  els.clearNextBtn.textContent='▶️ 进入第 '+(S.level+2)+' 关';
+  showModal('clear');
+}
+function levelFail(){
+  stopTimer(); S.running=false; S.lock=true;
+  var lv=LEVELS[S.level];
+  saveBest(S.score);
+  sfxLose();
+  els.failScore.textContent=S.score+' 分';
+  els.failKpi.textContent=lv.kpi+' 分';
+  showModal('fail');
+  refreshHome();
+}
+function showFinalReport(){
+  var rk=rankOf(best);
+  els.reportDate.textContent='今日营业 · '+nowHM();
+  els.reportRank.textContent=rk.icon+' '+rk.name;
+  els.reportIncome.textContent=S.runTotal;
+  els.reportBest.textContent=best;
+  els.reportLevel.textContent='全通 '+LEVELS.length+' 关';
+  els.reportTime.textContent=nowHM();
+  els.rpFill.style.width='100%';
+  els.saveBtn.textContent='📸 保存战报';
+  showModal('report');
+}
+function saveReport(){
+  var list=store.get(K.reports,[]);
+  var rk=rankOf(best);
+  list.unshift({date:nowHM(),score:S.runTotal,best:best,rank:rk.name,level:'全通 '+LEVELS.length+' 关'});
+  if(list.length>5) list.length=5;
+  store.set(K.reports,list);
+  els.saveBtn.textContent='✅ 已保存';
+  sfxSuccess();
+  setTimeout(function(){ els.saveBtn.textContent='📸 保存战报'; },1600);
+}
+
+/* ===== 事件绑定 ===== */
+els.startBtn.addEventListener('click',function(){ sfxClick(); S.runTotal=0; startLevel(unlock,true); });
+els.introGoBtn.addEventListener('click',function(){ sfxClick(); hideModal('intro'); S.lock=false; startTimer(); });
+els.pauseBtn.addEventListener('click',function(){ togglePause(true); });
+function togglePause(show){
+  if(S.lock||!S.running) return;
+  S.paused=show;
+  if(show){ showModal('pause'); sfxClick(); } else { hideModal('pause'); sfxClick(); }
+}
+els.resumeBtn.addEventListener('click',function(){ togglePause(false); });
+els.restartBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); startLevel(S.level,false); });
+els.quitBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); goHome(); });
+els.clearNextBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); startLevel(S.level+1,false); });
+els.clearHomeBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); goHome(); });
+els.failRetryBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); startLevel(S.level,false); });
+els.failHomeBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); goHome(); });
+els.homeBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); goHome(); });
+els.replayBtn.addEventListener('click',function(){ sfxClick(); hideAllModals(); S.runTotal=0; startLevel(0,true); });
+els.saveBtn.addEventListener('click',saveReport);
+els.guideLink.addEventListener('click',function(){ sfxClick(); showModal('guide'); });
+els.guideClose.addEventListener('click',function(){ sfxClick(); hideModal('guide'); });
+els.soundBtnHome.addEventListener('click',toggleSound);
+els.soundBtnGame.addEventListener('click',toggleSound);
+els.clearBtn.addEventListener('click',clearTray);
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden&&S.running&&!S.paused&&!S.lock) togglePause(true);
+});
+document.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+
+/* ===== 提示 ===== */
+var toastTimer=null;
+function toast(msg){
   els.toast.textContent=msg;
   els.toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){ els.toast.classList.remove('show'); },1200);
-}
-function showScreen(name){
-  S.screen=name;
-  els.screenHome.classList.toggle('hidden', name!=='home');
-  els.screenGame.classList.toggle('hidden', name!=='game');
-  if(name==='home') refreshBest();
+  toastTimer=setTimeout(function(){ els.toast.classList.remove('show'); },1400);
 }
 
-var audioCtx=null;
-function beep(f,d,t,v){
-  if(!sound) return;
-  try{
-    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type=t; o.frequency.value=f;
-    g.gain.setValueAtTime(v,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
-    o.connect(g).connect(audioCtx.destination);
-    o.start(); o.stop(audioCtx.currentTime+d);
-  }catch(e){}
-}
-function sClick(){ beep(520,.05,'triangle',.10); }
-function sPick(){ beep(560,.05,'triangle',.10); }
-function sGood(){ beep(660,.08,'triangle',.12); setTimeout(function(){ beep(880,.10,'triangle',.12); },70); }
-function sPass(){ beep(660,.08,'triangle',.12); setTimeout(function(){ beep(880,.08,'triangle',.12); },80); setTimeout(function(){ beep(1046,.12,'triangle',.12); },160); }
-function sBad(){ beep(200,.18,'sawtooth',.06); }
-function sWin(){ [523,659,784,1046].forEach(function(f,i){ setTimeout(function(){ beep(f,.16,'triangle',.12); },i*120); }); }
-function sStart(){ [523,784].forEach(function(f,i){ setTimeout(function(){ beep(f,.1,'triangle',.12); },i*90); }); }
-
-function syncSoundIcons(){
-  var icons=document.querySelectorAll('.sound-icon');
-  for(var i=0;i<icons.length;i++){ icons[i].textContent=sound?'🔊':'🔇'; }
-}
-
-function refreshBest(){
-  els.bestScore.textContent=best;
-  var r=rankOf(best);
-  els.bestRank.textContent=r.icon+' '+r.name;
-}
-
-function buildGrid(){
-  els.grid.innerHTML='';
-  FOODS.forEach(function(f){
-    var b=document.createElement('button');
-    b.className='food-btn';
-    b.setAttribute('data-id',f.id);
-    b.innerHTML='<span class="e">'+f.emoji+'</span><span class="n">'+f.name+'</span>';
-    b.addEventListener('click',function(){ onFoodClick(f.id); });
-    els.grid.appendChild(b);
-  });
-}
-
-function newOrder(){
-  var picked=shuffle(FOODS).slice(0,2+Math.floor(Math.random()*2));
-  S.order=picked.map(function(f){ return f.id; });
-  els.customer.textContent=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
-  els.orderItems.innerHTML='';
-  picked.forEach(function(f){
-    var chip=document.createElement('div');
-    chip.className='order-chip';
-    chip.innerHTML='<span class="e">'+f.emoji+'</span><span class="n">'+f.name+'</span>';
-    els.orderItems.appendChild(chip);
-  });
-  var btns=document.querySelectorAll('.food-btn');
-  for(var i=0;i<btns.length;i++){
-    btns[i].classList.toggle('hint', S.order.indexOf(btns[i].getAttribute('data-id'))!==-1);
-  }
-  els.orderArea.classList.remove('burst');
-  S.selected=[];
-  renderTray();
-}
-
-function renderTray(){
-  if(S.selected.length===0){
-    els.tray.innerHTML='👐 你的托盘是空的';
-  }else{
-    els.tray.innerHTML='';
-    S.selected.forEach(function(id){
-      for(var i=0;i<FOODS.length;i++){
-        if(FOODS[i].id===id){
-          var s=document.createElement('span');
-          s.textContent=FOODS[i].emoji;
-          els.tray.appendChild(s);
-          break;
-        }
-      }
-    });
-  }
-  var btns=document.querySelectorAll('.food-btn');
-  for(var i=0;i<btns.length;i++){
-    btns[i].classList.toggle('picked', S.selected.indexOf(btns[i].getAttribute('data-id'))!==-1);
-  }
-}
-
-function onFoodClick(id){
-  if(S.screen!=='game'||S.lock) return;
-  var need=0, have=0;
-  for(var i=0;i<S.order.length;i++){ if(S.order[i]===id) need++; }
-  for(var j=0;j<S.selected.length;j++){ if(S.selected[j]===id) have++; }
-  if(need===0||have>=need){
-    sBad();
-    var btn=document.querySelector('.food-btn[data-id="'+id+'"]');
-    if(btn){ btn.classList.add('wrong'); setTimeout(function(){ btn.classList.remove('wrong'); },450); }
-    S.selected=[];
-    renderTray();
-    showToast(need===0?'这个不在订单里哦～':'已经拿太多啦！');
-    return;
-  }
-  S.selected.push(id);
-  sPick();
-  renderTray();
-  if(matchOrder()) success();
-}
-
-function matchOrder(){
-  return S.selected.slice().sort().join(',')===S.order.slice().sort().join(',');
-}
-
-function success(){
-  S.lock=true;
-  S.score++;
-  S.levelScore++;
-  els.score.textContent=S.score;
-  els.score.classList.remove('bump'); void els.score.offsetWidth; els.score.classList.add('bump');
-  els.orderArea.classList.add('burst');
-  spawnSparks();
-  updateKpi();
-  var lv=LEVELS[S.level];
-  if(S.levelScore>=lv.kpi){
-    sPass();
-    showToast('🎉 KPI 达标！继续冲～');
-  }else{
-    sGood();
-    showToast('🎉 上菜成功 +1');
-  }
-  setTimeout(function(){ newOrder(); S.lock=false; },420);
-}
-
-function updateKpi(){
-  var lv=LEVELS[S.level];
-  els.kpiText.textContent='KPI '+S.levelScore+'/'+lv.kpi;
-  var pct=Math.min(100,(S.levelScore/lv.kpi)*100);
-  els.kpiFill.style.width=pct+'%';
-  els.kpiFill.classList.toggle('done', S.levelScore>=lv.kpi);
-}
-
-function updateTimer(){
-  var secs=Math.ceil(S.timeLeft);
-  els.time.textContent=secs+'s';
-  els.time.classList.toggle('danger', S.timeLeft<=10);
-  var lv=LEVELS[S.level];
-  els.timerFill.style.width=Math.max(0,(S.timeLeft/lv.time)*100)+'%';
-  els.timerFill.classList.toggle('danger', S.timeLeft<=10);
-}
-
-function updateHUD(){
-  var lv=LEVELS[S.level];
-  els.levelChip.textContent='第 '+(S.level+1)+'/'+LEVELS.length+' 关 · '+lv.name;
-  els.score.textContent=S.score;
-  updateKpi();
-  updateTimer();
-}
-
-function runTimer(){
-  clearInterval(S.timerId);
-  S.timerId=setInterval(function(){
-    S.timeLeft=Math.max(0,S.timeLeft-.1);
-    updateTimer();
-    if(S.timeLeft<=0){ clearInterval(S.timerId); endLevel(); }
-  },100);
-}
-
-function startLevel(i){
-  S.level=i;
-  S.levelScore=0;
-  S.selected=[];
-  clearInterval(S.timerId);
-  var lv=LEVELS[i];
-  S.timeLeft=lv.time;
-  newOrder();
-  updateHUD();
-  S.lock=true;
-  els.introEmoji.textContent=i===0?'🍳':'🔥';
-  els.introTitle.textContent='第 '+(i+1)+' 关';
-  els.introName.textContent=lv.name;
-  els.introKpi.textContent=lv.kpi;
-  els.introTime.textContent=lv.time;
-  els.levelIntro.classList.add('show');
-  clearTimeout(introTimer);
-  introTimer=setTimeout(function(){
-    els.levelIntro.classList.remove('show');
-    S.lock=false;
-    runTimer();
-  },1200);
-}
-
-function startRun(){
-  S.runStart=Date.now();
-  S.score=0;
-  S.running=true;
-  S.paused=false;
-  els.pauseOverlay.classList.remove('show');
-  els.reportModal.classList.remove('show');
-  showScreen('game');
-  startLevel(0);
-}
-
-function endLevel(){
-  var lv=LEVELS[S.level];
-  var passed=S.levelScore>=lv.kpi;
-  if(passed){
-    if(S.level===LEVELS.length-1){
-      sWin();
-      finishRun(true);
-    }else{
-      sPass();
-      showToast('🎉 达标晋级！');
-      setTimeout(function(){ startLevel(S.level+1); },900);
-    }
-  }else{
-    sBad();
-    finishRun(false);
-  }
-}
-
-function finishRun(victory){
-  S.running=false;
-  var total=S.score;
-  if(total>best){ best=total; store.set('canteen_best',best); }
-  var rank=rankOf(total);
-  var prog=rankProgress(total);
-  els.reportDate.textContent=nowDate()+' · 营业战报';
-  els.reportAvatar.textContent=victory?'🏆':rank.icon;
-  els.reportRank.textContent=victory?'完美收官 · '+rank.name:rank.name;
-  els.reportTag.textContent=victory?'整间食堂都被你经营得热热闹闹！':'今天也是元气满满的一天！';
-  els.reportIncome.textContent=total;
-  els.reportBest.textContent=best;
-  els.reportLevel.textContent=victory?'全通 '+LEVELS.length+' 关':'第 '+(S.level+1)+' 关';
-  els.reportTime.textContent=nowClock();
-  els.rpText.textContent=prog.text;
-  els.rpPct.textContent=prog.pct+'%';
-  els.rpFill.style.width=prog.pct+'%';
-  S.latest={
-    date:nowDate(), clock:nowClock(), total:total, best:best,
-    level:victory?'全通':'第 '+(S.level+1)+' 关', rank:rank.name, victory:victory
-  };
-  els.reportModal.classList.add('show');
-  spawnConfetti();
-}
-
-function spawnSparks(){
-  var rect=els.orderArea.getBoundingClientRect();
-  var cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
-  var emojis=['✨','⭐','💛','🍀','🎉'];
-  for(var i=0;i<10;i++){
-    var s=document.createElement('span');
-    s.className='confetti';
-    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    s.style.background='transparent';
-    s.style.fontSize='20px';
-    s.style.width='auto'; s.style.height='auto'; s.style.borderRadius='0';
-    var ang=Math.random()*Math.PI*2, dist=60+Math.random()*90;
-    s.style.setProperty('--dx',Math.cos(ang)*dist+'px');
-    s.style.setProperty('--dy',Math.sin(ang)*dist+'px');
-    s.style.left=cx+'px';
-    s.style.top=cy+'px';
-    document.body.appendChild(s);
-    (function(el){ setTimeout(function(){ el.remove(); },1150); })(s);
-  }
-}
-
-function spawnConfetti(){
-  var colors=['#FF7A45','#FFB35C','#3ECF8E','#5BA7FF','#FF5A5A','#FFD166'];
-  for(var i=0;i<26;i++){
-    var c=document.createElement('span');
-    c.className='confetti';
-    c.style.background=colors[Math.floor(Math.random()*colors.length)];
-    var ang=Math.random()*Math.PI*2, dist=80+Math.random()*160;
-    c.style.setProperty('--dx',Math.cos(ang)*dist+'px');
-    c.style.setProperty('--dy',Math.sin(ang)*dist+'px');
-    c.style.left=(window.innerWidth/2)+'px';
-    c.style.top=(window.innerHeight/2)+'px';
-    document.body.appendChild(c);
-    (function(el){ setTimeout(function(){ el.remove(); },1150); })(c);
-  }
-}/* ---------- 交互 ---------- */
-function toggleSound(){
-  sound=!sound;
-  store.set('canteen_sound', sound);
-  syncSoundIcons();
-  if(sound) sClick();
-}
-
-function togglePause(){
-  if(S.screen!=='game'||!S.running||S.lock) return;
-  if(S.paused){
-    S.paused=false;
-    els.pauseOverlay.classList.remove('show');
-    runTimer();
-    sClick();
-  }else{
-    S.paused=true;
-    clearInterval(S.timerId);
-    els.pauseOverlay.classList.add('show');
-    sClick();
-  }
-}
-
-function goHome(){
-  clearInterval(S.timerId);
-  S.running=false;
-  els.pauseOverlay.classList.remove('show');
-  els.reportModal.classList.remove('show');
-  els.levelIntro.classList.remove('show');
-  showScreen('home');
-}
-
-els.startBtn.addEventListener('click',function(){ sStart(); startRun(); });
-els.pauseBtn.addEventListener('click',togglePause);
-els.resumeBtn.addEventListener('click',togglePause);
-els.quitBtn.addEventListener('click',goHome);
-els.clearBtn.addEventListener('click',function(){
-  if(S.screen!=='game'||S.lock) return;
-  S.selected=[];
-  renderTray();
-  sClick();
-});
-els.replayBtn.addEventListener('click',function(){
-  els.reportModal.classList.remove('show');
-  sStart();
-  startRun();
-});
-els.homeBtn.addEventListener('click',goHome);
-els.saveBtn.addEventListener('click',function(){
-  var list=store.get('canteen_reports',[]);
-  if(!Array.isArray(list)) list=[];
-  list.unshift(S.latest);
-  store.set('canteen_reports', list.slice(0,5));
-  els.saveBtn.classList.add('saved');
-  els.saveBtn.textContent='✅ 已保存';
-  showToast('📸 战报已保存到本机');
-  setTimeout(function(){
-    els.saveBtn.classList.remove('saved');
-    els.saveBtn.textContent='📸 保存战报';
-  },1600);
-});
-var soundBtns=document.querySelectorAll('.sound-icon');
-for(var i=0;i<soundBtns.length;i++){
-  soundBtns[i].addEventListener('click',toggleSound);
-}
-
-/* ===== BOOT ===== */
-syncSoundIcons();
-refreshBest();
+/* ===== 启动 ===== */
 buildGrid();
+refreshHome();
 showScreen('home');
-})();
+renderSoundBtns();
 </script>
 </body>
 </html>
