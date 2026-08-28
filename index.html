@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FF7A45">
+<title>爆忙！一人食堂 🍳</title>
+<style>
+:root{
+  --wood1:#F0C98E; --wood2:#D9A066; --wood3:#C68A4E; --woodD:#8A5429;
+  --amber:#FF7A45; --amber2:#FFB35C; --amber3:#FFD9A0; --cream:#FFF6EA;
+  --ink:#5C3A21; --ink2:#9A6B4B; --ok:#8CCDB0; --okd:#2E7D5F; --bad:#F2A08C; --badd:#C26048;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;position:fixed;inset:0;width:100%;overscroll-behavior:none;}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(120% 55% at 50% -8%, rgba(255,236,200,.95), rgba(255,236,200,0) 62%),
+    radial-gradient(80% 45% at 88% 108%, rgba(255,190,120,.5), rgba(255,190,120,0) 60%),
+    radial-gradient(80% 45% at 8% 106%, rgba(255,150,95,.42), rgba(255,150,95,0) 60%),
+    linear-gradient(168deg,#FFDCA8 0%,#FFB35C 46%,#FF8A52 100%);
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;
+}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;
+  padding:max(8px,env(safe-area-inset-top)) 14px max(8px,env(safe-area-inset-bottom));
+  z-index:1;}
+.screen.on{display:flex;animation:scrIn .26s ease;}
+@keyframes scrIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
+.wood{
+  background:
+    repeating-linear-gradient(90deg, rgba(90,50,15,.07) 0 3px, transparent 3px 14px),
+    linear-gradient(180deg,var(--wood1) 0%,var(--wood2) 55%,var(--wood3) 100%);
+  border:3px solid var(--woodD);
+  border-radius:16px;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(120,60,20,.25),0 5px 0 rgba(120,60,20,.3);
+}
+.btn3d{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:900;letter-spacing:.06em;color:#fff;
+  background:linear-gradient(180deg,var(--amber2) 0%,var(--amber) 100%);
+  border:3px solid #D95F2E;border-radius:20px;
+  box-shadow:0 6px 0 #B84A1F,0 12px 22px rgba(150,60,10,.35),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -8px 12px rgba(170,50,10,.18);
+  transition:transform .07s ease,box-shadow .07s ease;
+}
+.btn3d:active{transform:translateY(5px);box-shadow:0 1px 0 #B84A1F,inset 0 2px 0 rgba(255,255,255,.4);}
+.btn3d.ghost{background:linear-gradient(180deg,#FFF8EC,#FFE2B8);color:var(--ink);border-color:#C98A4B;box-shadow:0 5px 0 #A96A30,0 8px 16px rgba(150,70,20,.18),inset 0 2px 0 #fff;}
+.btn3d.ghost:active{box-shadow:0 1px 0 #A96A30,inset 0 2px 0 #fff;}
+.btn3d.big{font-size:clamp(19px,5.4vw,24px);border-radius:24px;padding:16px 18px;width:100%;}
+.btn3d.small{padding:10px 16px;font-size:14px;border-radius:14px;gap:6px;}
+.home-top{display:flex;align-items:flex-start;justify-content:space-between;padding:4px 2px 0;}
+.rank-box{display:flex;align-items:center;gap:10px;min-width:0;}
+.avatar{
+  width:54px;height:54px;border-radius:18px;flex:none;
+  background:linear-gradient(180deg,#FFF8EC,#FFE2B8);border:3px solid var(--woodD);
+  box-shadow:0 4px 0 rgba(120,60,20,.3),inset 0 2px 0 #fff;
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+}
+.rank-info{min-width:0;}
+.rank-info b{display:block;font-size:clamp(13px,3.8vw,16px);color:#fff;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  text-shadow:0 1px 0 rgba(140,70,25,.55),0 2px 4px rgba(120,50,10,.3);}
+.xp-track{width:min(150px,38vw);height:11px;margin-top:6px;border-radius:99px;background:rgba(90,50,20,.38);box-shadow:inset 0 2px 3px rgba(60,30,10,.45);overflow:hidden;}
+.xp-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#FFD98A,#FF9A5C);box-shadow:inset 0 1px 0 rgba(255,255,255,.55);transition:width .4s ease;}
+.gear-btn{
+  width:48px;height:48px;border-radius:16px;font-size:23px;flex:none;
+  background:linear-gradient(180deg,#FFF8EC,#FFE2B8);border:3px solid var(--woodD);
+  box-shadow:0 4px 0 rgba(120,60,20,.3),inset 0 2px 0 #fff;
+  display:flex;align-items:center;justify-content:center;transition:transform .07s,box-shadow .07s;
+}
+.gear-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(120,60,20,.3);}
+.home-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2.4vh,18px);}
+.logo-badge{
+  width:clamp(110px,34vw,160px);height:clamp(110px,34vw,160px);border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#FFF3D6,#FFCF8A 58%,#F5A653);
+  border:5px solid #fff;
+  box-shadow:0 8px 0 rgba(150,70,20,.35),0 18px 30px rgba(140,60,10,.3),inset 0 -10px 16px rgba(180,90,20,.25),inset 0 4px 8px rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;font-size:clamp(50px,16vw,74px);
+}
+.game-title{
+  font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:.08em;color:#fff;text-align:center;
+  text-shadow:0 3px 0 #E06A35,0 5px 0 rgba(160,60,15,.3),0 10px 20px rgba(160,60,15,.4);
+}
+.slogan{font-size:clamp(11px,3.2vw,13.5px);color:#8A4E2E;font-weight:800;letter-spacing:.05em;text-align:center;padding:0 10px;}
+.home-footer{margin-top:auto;padding-bottom:6px;}
+.mini-tip{margin-top:10px;text-align:center;font-size:11px;color:#8A4E2E;font-weight:700;}
+.mini-tip .link{text-decoration:underline;cursor:pointer;}
+.overlay{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(80,40,15,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+.overlay.show{display:flex;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.panel{width:min(360px,94vw);max-height:92%;overflow-y:auto;padding:18px 16px 16px;text-align:center;animation:bounceIn .3s cubic-bezier(.34,1.56,.64,1);}
+.panel.white{background:linear-gradient(180deg,#FFFEFB,#FFF3E0);border-radius:26px;border:3px solid var(--woodD);box-shadow:0 8px 0 rgba(160,80,30,.25),0 24px 48px rgba(100,45,10,.35),inset 0 2px 0 #fff;}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.7) translateY(24px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.panel-emoji{font-size:42px;margin-bottom:6px;}
+.panel-title{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:.04em;}
+.panel-sub{font-size:12px;font-weight:700;color:var(--ink2);margin-top:4px;}
+.select-head{font-size:19px;font-weight:900;color:#fff;letter-spacing:.06em;text-shadow:0 2px 0 rgba(140,70,25,.5);}
+.select-stats{display:flex;gap:8px;margin:12px 0;}
+.select-stat{flex:1;background:rgba(255,255,255,.9);border:2px solid var(--woodD);border-radius:14px;padding:8px 6px;box-shadow:inset 0 2px 0 #fff;}
+.select-stat .sl{font-size:10.5px;font-weight:800;color:var(--ink2);display:block;}
+.select-stat .sv{font-size:16px;font-weight:900;color:var(--amber);display:block;margin-top:2px;}
+.level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:min(330px,100%);margin:0 auto 12px;}
+.level-chip{
+  position:relative;aspect-ratio:1;border-radius:14px;font-weight:900;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:linear-gradient(180deg,#FFF,#FFEAD0);color:var(--ink);font-size:15px;
+  border:2px solid var(--woodD);
+  box-shadow:0 3px 0 #A96A30,0 6px 10px rgba(120,60,20,.2),inset 0 1.5px 0 #fff;
+  transition:transform .07s,box-shadow .07s;
+}
+.level-chip .lv-emoji{font-size:clamp(15px,4.6vw,20px);line-height:1;}
+.level-chip .lv-num{font-size:8.5px;font-weight:800;color:var(--ink2);line-height:1.2;}
+.level-chip.on{background:linear-gradient(180deg,var(--amber2),var(--amber));color:#fff;border-color:#D95F2E;}
+.level-chip.on .lv-num{color:#FFE9C7;}
+.level-chip.locked{background:linear-gradient(180deg,#F1E4D2,#EAD9C2);color:#C4A68B;border-color:#C4A68B;box-shadow:0 3px 0 #D8C2A5;cursor:not-allowed;}
+.level-chip:active:not(.locked){transform:translateY(3px);box-shadow:0 0 0 #A96A30;}
+.level-chip.wrong{animation:shake .4s;}
+.level-bar{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px 9px 24px;margin-bottom:8px;border-radius:14px;}
+.level-bar::before{content:'';position:absolute;left:6px;top:50%;width:13px;height:13px;border-radius:50%;transform:translateY(-50%);background:radial-gradient(circle at 35% 30%,#C98A4B,#8A5429);border:2px solid #6E3F1F;box-shadow:inset 0 1px 0 rgba(255,255,255,.35);}
+.level-text{font-size:clamp(12px,3.6vw,15px);font-weight:900;color:#5A3415;letter-spacing:.04em;text-shadow:0 1px 0 rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.game-btns{display:flex;gap:7px;flex:none;}
+.sq-btn{
+  width:40px;height:40px;border-radius:12px;font-size:19px;
+  background:linear-gradient(180deg,#FFF8EC,#FFE2B8);border:3px solid var(--woodD);
+  box-shadow:0 3px 0 rgba(120,60,20,.3),inset 0 2px 0 #fff;
+  display:flex;align-items:center;justify-content:center;transition:transform .07s,box-shadow .07s;
+}
+.sq-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(120,60,20,.3);}
+.status-row{display:flex;gap:10px;margin-bottom:8px;}
+.bar-block{flex:1;min-width:0;}
+.bar-label{display:flex;justify-content:space-between;gap:6px;font-size:11px;font-weight:800;color:#6B3F1C;margin-bottom:3px;text-shadow:0 1px 0 rgba(255,255,255,.3);}
+.bar{height:13px;border-radius:99px;background:rgba(90,50,20,.35);overflow:hidden;box-shadow:inset 0 2px 3px rgba(60,30,10,.4);}
+.bar>div{height:100%;width:100%;border-radius:99px;transition:width .2s ease;background:linear-gradient(90deg,var(--amber2),var(--amber));box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
+.bar.timer>div{background:linear-gradient(90deg,#FFCF7A,#FF8A52);}
+.bar.timer>div.low{background:linear-gradient(90deg,var(--bad),#FFB35C);}
+.bar.kpi>div{background:linear-gradient(90deg,#9BD8BC,#63B98D);}
+.scoreline{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+.scoreline .score-label{font-size:12px;font-weight:800;color:#6B3F1C;}
+.scoreline b{font-size:clamp(24px,7.4vw,36px);font-weight:900;color:#fff;text-shadow:0 2px 0 #E06A35,0 4px 0 rgba(160,60,15,.25);}
+.order-card{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;border-radius:18px;}
+.customer{font-size:clamp(24px,7vw,32px);flex:none;filter:drop-shadow(0 2px 2px rgba(120,60,20,.3));}
+.order-body{flex:1;min-width:0;}
+.order-text{font-size:11px;font-weight:800;color:#6B3F1C;display:block;margin-bottom:4px;}
+.order-items{display:flex;gap:8px;min-height:38px;align-items:center;flex-wrap:nowrap;overflow:hidden;}
+.order-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px dashed #C98A4B;border-radius:12px;padding:5px 9px;font-size:13px;font-weight:900;color:var(--ink);box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1.5px 0 #fff;white-space:nowrap;}
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,2.2vw,11px);margin-bottom:8px;}
+.food-btn{
+  position:relative;border-radius:18px;font-weight:900;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FFEFDA 100%);
+  border:3px solid var(--woodD);
+  box-shadow:0 4px 0 rgba(120,60,20,.35),0 8px 14px rgba(120,60,20,.16),inset 0 2px 0 #fff;
+  transition:transform .07s,box-shadow .07s;
+}
+.food-btn .f-emoji{font-size:clamp(22px,8vw,34px);line-height:1;}
+.food-btn .f-name{font-size:clamp(9px,3vw,12px);font-weight:800;color:var(--ink2);}
+.food-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(120,60,20,.35);}
+.food-btn.picked{background:linear-gradient(180deg,#FFF3D6,#FFE3AE);border-color:#D9953F;box-shadow:0 4px 0 #B8772A,0 0 0 3px rgba(255,179,92,.4);}
+.food-btn.picked .f-emoji{animation:pick .25s ease;}
+@keyframes pick{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.food-btn.wrong{animation:shake .4s;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.tray-row{display:flex;gap:10px;align-items:stretch;}
+.tray{flex:1;display:flex;gap:8px;padding:9px 10px;min-height:56px;border-radius:16px;}
+.tray-slot{flex:1;border:2px dashed #A96A30;border-radius:12px;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,28px);min-height:34px;}
+.tray-slot.fill{border-style:solid;border-color:#C98A4B;background:#fff;box-shadow:0 2px 0 rgba(120,60,20,.15);}
+.tray.bad{animation:shake .4s;}
+.trash-btn{
+  align-self:center;display:inline-flex;align-items:center;gap:5px;flex:none;
+  padding:11px 13px;font-size:13px;font-weight:900;color:#fff;border-radius:14px;
+  background:linear-gradient(180deg,#F2A08C,#D97B5C);border:3px solid #A9533A;
+  box-shadow:0 4px 0 #8F4229,inset 0 2px 0 rgba(255,255,255,.4);transition:transform .07s,box-shadow .07s;
+}
+.trash-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8F4229;}
+.kv{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:14px;border:2px solid #EAC7A0;padding:8px 12px;margin-top:8px;font-size:13px;font-weight:800;color:var(--ink2);box-shadow:inset 0 1.5px 0 rgba(205,115,50,.08);}
+.kv b{color:var(--amber);font-size:16px;font-weight:900;}
+.modal-btns{display:flex;gap:10px;margin-top:14px;}
+.modal-btns .btn3d{flex:1;}
+.report-rank{font-size:19px;font-weight:900;color:var(--amber);text-shadow:0 1px 0 #fff;margin-top:6px;}
+.progress{height:12px;border-radius:999px;background:rgba(107,58,42,.12);overflow:hidden;margin-top:8px;box-shadow:inset 0 2px 3px rgba(107,58,42,.15);}
+.progress>div{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--amber2),var(--amber));transition:width .4s ease;}
+.guide-text{font-size:12px;color:var(--ink2);font-weight:700;line-height:1.6;text-align:left;margin-top:8px;background:#fff;border-radius:12px;border:2px solid #EAC7A0;padding:8px 10px;}
+.setting-row{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+.setting-row .btn3d{width:100%;padding:13px;}
+#toast{position:absolute;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-140%);z-index:90;background:rgba(80,40,15,.94);color:#fff;font-size:13px;font-weight:800;padding:9px 16px;border-radius:999px;transition:transform .3s ease;box-shadow:0 8px 20px rgba(0,0,0,.25);pointer-events:none;max-width:86vw;text-align:center;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+@media (max-height:640px){
+  .logo-badge{width:100px;height:100px;font-size:46px;}
+  .home-hero{gap:6px;}
+  .order-card{padding:8px 10px;}
+  .grid{gap:6px;margin-bottom:6px;}
+  .tray{min-height:48px;padding:7px 8px;}
+  .status-row{margin-bottom:6px;}
+  .level-bar{margin-bottom:6px;}
+}
+@media (max-height:560px){
+  .logo-badge{width:82px;height:82px;font-size:36px;}
+  .game-title{font-size:26px;}
+  .avatar{width:46px;height:46px;font-size:25px;}
+}
+</style></head>
+<body>
+
+<!-- ========== 首页 ========== -->
+<section class="screen on" id="screenHome">
+  <div class="home-top">
+    <div class="rank-box">
+      <div class="avatar">🧑‍🍳</div>
+      <div class="rank-info">
+        <b id="rankText">见习店员 Lv.1</b>
+        <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <button class="gear-btn" id="gearBtn" aria-label="设置">⚙️</button>
+  </div>
+  <div class="home-hero">
+    <div class="logo-badge">🍳</div>
+    <h1 class="game-title">爆忙！一人食堂</h1>
+    <p class="slogan">一个人，也要把整间食堂经营得热气腾腾</p>
+  </div>
+  <div class="home-footer">
+    <button class="btn3d big" id="startBtn">🛎️ 开始游戏</button>
+    <p class="mini-tip">无需登录 · 离线可玩 · <span class="link" id="homeGuideLink">新手引导</span></p>
+  </div>
+</section>
+
+<!-- ========== 游戏主界面 ========== -->
+<section class="screen" id="screenGame">
+  <div class="level-bar wood">
+    <div class="level-text" id="levelText">第 1 / 10 关 · 新手试业</div>
+    <div class="game-btns">
+      <button class="sq-btn" id="soundBtnGame" aria-label="音效开关">🔊</button>
+      <button class="sq-btn" id="pauseBtn" aria-label="暂停">⏸️</button>
+    </div>
+  </div>
+  <div class="status-row">
+    <div class="bar-block">
+      <div class="bar-label"><span>⏱️ 营业倒计时</span><b id="timeText">60s</b></div>
+      <div class="bar timer"><div id="timerFill" style="width:100%"></div></div>
+    </div>
+    <div class="bar-block">
+      <div class="bar-label"><span>🎯 今日 KPI</span><b id="kpiText">0 / 15</b></div>
+      <div class="bar kpi"><div id="kpiFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="scoreline"><span class="score-label">🔥 今日得分</span><b id="score">0</b></div>
+  <div class="order-card wood">
+    <div class="customer" id="customer">🧑</div>
+    <div class="order-body">
+      <span class="order-text">这位顾客想吃的：</span>
+      <div class="order-items" id="orderItems"></div>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="tray-row">
+    <div class="tray wood" id="tray">
+      <div class="tray-slot"></div>
+      <div class="tray-slot"></div>
+      <div class="tray-slot"></div>
+    </div>
+    <button class="trash-btn" id="clearBtn">🗑️ 清空</button>
+  </div>
+</section>
+
+<!-- ========== 选关面板 ========== -->
+<div class="overlay" id="selectModal">
+  <div class="panel wood">
+    <div class="select-head">📜 选择关卡 · 开张大吉</div>
+    <div class="select-stats">
+      <div class="select-stat"><span class="sl">🏆 历史最高分</span><span class="sv" id="selBest">0 分</span></div>
+      <div class="select-stat"><span class="sl">📍 当前段位</span><span class="sv" id="selRank">见习店员</span></div>
+    </div>
+    <div class="level-grid" id="levelGrid"></div>
+    <div class="modal-btns">
+      <button class="btn3d ghost" id="selHomeBtn">🏠 返回主页</button>
+      <button class="btn3d" id="goStartBtn">🛎️ 直接开玩</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 暂停 ========== -->
+<div class="overlay" id="pauseModal">
+  <div class="panel white">
+    <div class="panel-emoji">☕</div>
+    <div class="panel-title">休息一下</div>
+    <div class="panel-sub">厨房已暂停，食材不会坏～</div>
+    <div class="kv"><span>本关进度</span><b id="pauseInfo">0 / 15</b></div>
+    <div class="modal-btns">
+      <button class="btn3d ghost" id="restartBtn">🔄 重开本关</button>
+      <button class="btn3d" id="resumeBtn">▶️ 继续营业</button>
+    </div>
+    <button class="btn3d ghost small" id="quitBtn" style="width:100%;margin-top:10px;">🏠 返回主页</button>
+  </div>
+</div>
+
+<!-- ========== 过关 ========== -->
+<div class="overlay" id="clearModal">
+  <div class="panel white">
+    <div class="panel-emoji">🎉</div>
+    <div class="panel-title">KPI 达成！</div>
+    <div class="panel-sub" id="clearSub">第 1 关 · 新手试业</div>
+    <div class="kv"><span>本关得分</span><b id="clearScore">0 分</b></div>
+    <div class="modal-btns">
+      <button class="btn3d ghost" id="clearHomeBtn">🏠 返回主页</button>
+      <button class="btn3d" id="nextBtn">⏭️ 进入下一关</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 失败 ========== -->
+<div class="overlay" id="failModal">
+  <div class="panel white">
+    <div class="panel-emoji">😭</div>
+    <div class="panel-title">打烊啦…</div>
+    <div class="panel-sub" id="failSub">第 1 关 · 新手试业</div>
+    <div class="kv"><span>本关得分</span><b id="failScore">0 分</b></div>
+    <div class="kv"><span>还差多少达标</span><b id="failDiff">0 分</b></div>
+    <div class="modal-btns">
+      <button class="btn3d ghost" id="failHomeBtn">🏠 返回主页</button>
+      <button class="btn3d" id="retryBtn">🔁 重试本关</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 营业战报 ========== -->
+<div class="overlay" id="reportModal">
+  <div class="panel white">
+    <div class="panel-emoji">🏆</div>
+    <div class="panel-title">营业战报</div>
+    <div class="report-rank" id="reportRank">🏅 见习店员</div>
+    <div class="kv"><span>⏰ 打烊时间</span><b id="reportTime">--:--</b></div>
+    <div class="kv"><span>🔥 营业收入</span><b id="reportScore">0 分</b></div>
+    <div class="kv"><span>🏆 历史最高分</span><b id="reportBest">0 分</b></div>
+    <div class="progress"><div id="reportXp" style="width:0%"></div></div>
+    <div class="modal-btns">
+      <button class="btn3d ghost" id="reportHomeBtn">🏠 返回主页</button>
+      <button class="btn3d" id="saveBtn">📋 保存战报</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 设置 ========== -->
+<div class="overlay" id="settingsModal">
+  <div class="panel white">
+    <div class="panel-emoji">⚙️</div>
+    <div class="panel-title">设置</div>
+    <div class="setting-row">
+      <button class="btn3d" id="soundBtnSet">🔊 音效：开</button>
+      <button class="btn3d ghost" id="guideBtn">📖 新手指南</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 新手指南 ========== -->
+<div class="overlay" id="guideModal">
+  <div class="panel white">
+    <div class="panel-emoji">📖</div>
+    <div class="panel-title">新店长上岗指南</div>
+    <div class="guide-text">
+      🍔 1. 看准订单：顾客要什么，你就点什么；<br>
+      🧋 2. 连消上菜：点齐订单组合立即上菜 +1 分；<br>
+      🗑️ 3. 点错即罚：点错会震动并清空整个托盘哦！
+    </div>
+    <div class="modal-btns"><button class="btn3d" id="guideOkBtn">明白了！</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<style>.panel{scrollbar-width:none;}.panel::-webkit-scrollbar{display:none;}</style>
+<script>(() => {
+'use strict';
+const $  = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem('canteen_' + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('canteen_' + k, JSON.stringify(v)); }catch(e){} }
+};
+
+const FOODS = [
+  { k:'burger',   e:'🍔', n:'汉堡' },
+  { k:'sushi',    e:'🍣', n:'寿司' },
+  { k:'ramen',    e:'🍜', n:'拉面' },
+  { k:'dessert',  e:'🍰', n:'甜点' },
+  { k:'milktea',  e:'🧋', n:'奶茶' },
+  { k:'kebab',    e:'🍢', n:'烤串' },
+  { k:'dumpling', e:'🥟', n:'饺子' },
+  { k:'icecream', e:'🍦', n:'冰淇淋' },
+  { k:'pancake',  e:'🥞', n:'松饼' }
+];
+
+const LEVELS = [
+  { name:'新手试业', kpi:15, time:60 },
+  { name:'街坊熟客', kpi:16, time:59 },
+  { name:'小店爆单', kpi:17, time:58 },
+  { name:'午市高峰', kpi:18, time:57 },
+  { name:'人气小店', kpi:20, time:56 },
+  { name:'口碑名店', kpi:22, time:55 },
+  { name:'排队之王', kpi:24, time:54 },
+  { name:'黄金档口', kpi:25, time:53 },
+  { name:'传说食堂', kpi:26, time:53 },
+  { name:'魔鬼经理', kpi:27, time:52 }
+];
+
+const RANKS = [
+  { name:'见习店员', lv:1, need:0   },
+  { name:'初级店员', lv:2, need:20  },
+  { name:'熟练店员', lv:3, need:45  },
+  { name:'资深主厨', lv:4, need:80  },
+  { name:'金牌店长', lv:5, need:120 },
+  { name:'五星主厨', lv:6, need:160 }
+];
+
+const LEVEL_EMOJI = ['🍔','🍜','🍣','🧋','🍢','🥟','🍦','🥞','🍰','🏆'];
+
+let best    = LS.get('best', 0);
+let unlock  = LS.get('unlock', 1);
+let soundOn = LS.get('sound', true);
+let reports = LS.get('reports', []);
+
+let curIdx = 0, score = 0, timeLeft = 60, timerId = null;
+let order = [], tray = [], playing = false, paused = false;
+
+/* ---------- 音效（Web Audio 合成，无外部资源） ---------- */
+let AC = null;
+function audioCtx(){
+  if(!AC){ try{ AC = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} }
+  return AC;
+}
+function tone(freq, dur, type, vol, delay){
+  if(!soundOn) return;
+  const a = audioCtx(); if(!a) return;
+  const t = a.currentTime + (delay || 0);
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.2, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(a.destination);
+  o.start(t); o.stop(t + dur + 0.06);
+}
+const sfx = {
+  click(){ tone(520, .08, 'triangle', .14); },
+  pick(){ tone(660, .09, 'triangle', .18); tone(880, .12, 'sine', .12, .05); },
+  ok(){ tone(523, .12, 'triangle', .2); tone(659, .12, 'triangle', .2, .09); tone(784, .2, 'triangle', .22, .18); },
+  fail(){ tone(220, .18, 'sawtooth', .16); tone(160, .28, 'sawtooth', .16, .12); },
+  win(){ tone(523, .14, 'triangle', .2); tone(659, .14, 'triangle', .2, .12); tone(784, .14, 'triangle', .2, .24); tone(1047, .3, 'triangle', .22, .36); },
+  start(){ tone(392, .1, 'triangle', .18); tone(523, .14, 'triangle', .18, .1); }
+};
+
+/* ---------- 通用 ---------- */
+function getRank(b){ let r = RANKS[0]; for(const x of RANKS){ if(b >= x.need) r = x; } return r; }
+function levelLabel(i){ return '第 ' + (i + 1) + ' / ' + LEVELS.length + ' 关 · ' + LEVELS[i].name; }
+function showModal(id){ $('#' + id).classList.add('show'); }
+function hideAllModals(){ $$('.overlay').forEach(o => o.classList.remove('show')); }
+function showScreen(id){
+  $('#screenHome').classList.toggle('on', id === 'home');
+  $('#screenGame').classList.toggle('on', id === 'game');
+}
+
+let toastTimer = null;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+function refreshHome(){
+  const r = getRank(best);
+  $('#rankText').textContent = r.name + ' Lv.' + r.lv;
+  $('#xpFill').style.width = Math.min(100, best / 160 * 100) + '%';
+}
+function refreshSoundBtns(){
+  $('#soundBtnGame').textContent = soundOn ? '🔊' : '🔇';
+  $('#soundBtnSet').textContent  = soundOn ? '🔊 音效：开' : '🔇 音效：关';
+}
+
+/* ---------- 首页 / 选关 ---------- */
+function openSelect(){
+  refreshHome();
+  $('#selBest').textContent = best + ' 分';
+  $('#selRank').textContent = getRank(best).name;
+  renderLevels();
+  showModal('selectModal');
+  sfx.click();
+}
+function renderLevels(){
+  const g = $('#levelGrid'); g.innerHTML = '';
+  for(let i = 0; i < LEVELS.length; i++){
+    const ok = i < unlock;
+    const c = document.createElement('button');
+    c.className = 'level-chip' + (ok ? ' on' : ' locked');
+    c.innerHTML = '<span class="lv-emoji">' + (ok ? LEVEL_EMOJI[i] : '🔒') + '</span><span class="lv-num">' + (i + 1) + ' 关 · ' + LEVELS[i].name + '</span>';
+    c.addEventListener('click', () => {
+      if(!ok){
+        c.classList.remove('wrong'); void c.offsetWidth; c.classList.add('wrong');
+        sfx.fail(); toast('先完成上一关才能解锁哦 🔒'); return;
+      }
+      sfx.click(); hideAllModals(); startLevel(i);
+    });
+    g.appendChild(c);
+  }
+}
+function goHome(){
+  playing = false; paused = false;
+  clearInterval(timerId); timerId = null;
+  hideAllModals(); showScreen('home'); refreshHome(); sfx.click();
+}
+
+/* ---------- 游戏流程 ---------- */
+function startLevel(i){
+  curIdx = i; score = 0; timeLeft = LEVELS[i].time; order = []; tray = [];
+  playing = true; paused = false;
+  $('#levelText').textContent = levelLabel(i);
+  $('#score').textContent = '0';
+  $('#timeText').textContent = timeLeft + 's';
+  const tf = $('#timerFill'); tf.style.width = '100%'; tf.classList.remove('low');
+  $('#kpiText').textContent = '0 / ' + LEVELS[i].kpi;
+  $('#kpiFill').style.width = '0%';
+  clearTray();
+  buildGrid();
+  newOrder();
+  hideAllModals(); showScreen('game');
+  sfx.start();
+  clearInterval(timerId); timerId = null;
+  timerId = setInterval(tick, 1000);
+}
+function tick(){
+  if(paused || !playing) return;
+  timeLeft--;
+  if(timeLeft < 0) timeLeft = 0;
+  $('#timeText').textContent = timeLeft + 's';
+  const tf = $('#timerFill');
+  tf.style.width = (timeLeft / LEVELS[curIdx].time * 100) + '%';
+  tf.classList.toggle('low', timeLeft <= 10);
+  if(timeLeft <= 0){ clearInterval(timerId); timerId = null; levelFail(); }
+}
+function newOrder(){
+  const idxs = FOODS.map((_, i) => i);
+  for(let i = idxs.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = idxs[i]; idxs[i] = idxs[j]; idxs[j] = t;
+  }
+  order = [FOODS[idxs[0]].k, FOODS[idxs[1]].k];
+  tray = [];
+  const faces = ['🧑','👩','🧔','👧','👨','👵','👴','🧕'];
+  $('#customer').textContent = faces[Math.floor(Math.random() * faces.length)];
+  const wrap = $('#orderItems'); wrap.innerHTML = '';
+  order.forEach(k => {
+    const f = FOODS.find(x => x.k === k);
+    const chip = document.createElement('span');
+    chip.className = 'order-chip';
+    chip.textContent = f.e + ' ' + f.n;
+    wrap.appendChild(chip);
+  });
+  clearTray();
+}
+function buildGrid(){
+  const g = $('#grid'); g.innerHTML = '';
+  FOODS.forEach(f => {
+    const b = document.createElement('button');
+    b.className = 'food-btn'; b.dataset.k = f.k;
+    b.innerHTML = '<span class="f-emoji">' + f.e + '</span><span class="f-name">' + f.n + '</span>';
+    b.addEventListener('click', () => clickFood(f.k, b));
+    g.appendChild(b);
+  });
+}
+function clickFood(k, btn){
+  if(!playing || paused) return;
+  if(tray.length >= order.length){ punish(btn); return; }          // 超额
+  const need = order.filter(x => tray.indexOf(x) < 0);
+  if(need.indexOf(k) < 0){ punish(btn); return; }                  // 点错
+  tray.push(k); btn.classList.add('picked'); addTray(k); sfx.pick();
+  if(tray.length === order.length){
+    setTimeout(() => {
+      score++;
+      $('#score').textContent = score;
+      $('#kpiText').textContent = score + ' / ' + LEVELS[curIdx].kpi;
+      $('#kpiFill').style.width = Math.min(100, score / LEVELS[curIdx].kpi * 100) + '%';
+      sfx.ok();
+      if(score >= LEVELS[curIdx].kpi){ levelClear(); } else { newOrder(); }
+    }, 240);
+  }
+}
+function addTray(k){
+  const f = FOODS.find(x => x.k === k);
+  const slots = $$('#tray .tray-slot');
+  for(const s of slots){
+    if(!s.classList.contains('fill')){ s.textContent = f.e; s.classList.add('fill'); return; }
+  }
+}
+function clearTray(){
+  tray = [];
+  $$('#tray .tray-slot').forEach(s => { s.textContent = ''; s.classList.remove('fill'); });
+  $$('#grid .food-btn').forEach(b => b.classList.remove('picked', 'wrong'));
+}
+function punish(btn){
+  if(btn){ btn.classList.remove('wrong'); void btn.offsetWidth; btn.classList.add('wrong'); }
+  const tr = $('#tray'); tr.classList.remove('bad'); void tr.offsetWidth; tr.classList.add('bad');
+  if(navigator.vibrate){ try{ navigator.vibrate(160); }catch(e){} }
+  clearTray();
+  sfx.fail();
+  toast('点错啦！托盘已清空 💦');
+}
+function levelClear(){
+  playing = false; clearInterval(timerId); timerId = null;
+  if(best < score){ best = score; LS.set('best', best); }
+  if(unlock < LEVELS.length){
+    unlock = Math.max(unlock, curIdx + 2);
+    if(unlock > LEVELS.length) unlock = LEVELS.length;
+    LS.set('unlock', unlock);
+  }
+  sfx.win();
+  if(curIdx === LEVELS.length - 1){ showFinalReport(); return; }
+  $('#clearSub').textContent = '第 ' + (curIdx + 1) + ' 关 · ' + LEVELS[curIdx].name;
+  $('#clearScore').textContent = score + ' 分';
+  showModal('clearModal');
+}
+function levelFail(){
+  playing = false; clearInterval(timerId); timerId = null;
+  sfx.fail();
+  $('#failSub').textContent = '第 ' + (curIdx + 1) + ' 关 · ' + LEVELS[curIdx].name;
+  $('#failScore').textContent = score + ' 分';
+  $('#failDiff').textContent = Math.max(0, LEVELS[curIdx].kpi - score) + ' 分';
+  showModal('failModal');
+}
+function showFinalReport(){
+  const r = getRank(best);
+  $('#reportRank').textContent = '🏅 ' + r.name + ' · Lv.' + r.lv;
+  const n = new Date();
+  $('#reportTime').textContent = ('0' + n.getHours()).slice(-2) + ':' + ('0' + n.getMinutes()).slice(-2);
+  $('#reportScore').textContent = score + ' 分';
+  $('#reportBest').textContent = best + ' 分';
+  $('#reportXp').style.width = Math.min(100, best / 160 * 100) + '%';
+  showModal('reportModal');
+}
+
+/* ---------- 事件绑定 ---------- */
+$('#startBtn').addEventListener('click', openSelect);
+$('#gearBtn').addEventListener('click', () => { sfx.click(); showModal('settingsModal'); });
+$('#homeGuideLink').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
+$('#guideBtn').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
+$('#guideOkBtn').addEventListener('click', () => { hideAllModals(); sfx.click(); });
+
+$('#selHomeBtn').addEventListener('click', goHome);
+$('#goStartBtn').addEventListener('click', () => {
+  const i = Math.min(unlock, LEVELS.length) - 1;
+  hideAllModals(); startLevel(i);
+});
+
+function toggleSound(){
+  soundOn = !soundOn; LS.set('sound', soundOn);
+  refreshSoundBtns();
+  if(soundOn) sfx.click();
+  toast(soundOn ? '音效已开启 🔊' : '音效已关闭 🔇');
+}
+$('#soundBtnGame').addEventListener('click', toggleSound);
+$('#soundBtnSet').addEventListener('click', toggleSound);
+
+$('#pauseBtn').addEventListener('click', () => {
+  if(!playing || paused) return;
+  paused = true;
+  $('#pauseInfo').textContent = score + ' / ' + LEVELS[curIdx].kpi;
+  showModal('pauseModal'); sfx.click();
+});
+$('#resumeBtn').addEventListener('click', () => { paused = false; hideAllModals(); sfx.click(); });
+$('#restartBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx); });
+$('#quitBtn').addEventListener('click', goHome);
+
+$('#clearHomeBtn').addEventListener('click', goHome);
+$('#nextBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx + 1); });
+
+$('#failHomeBtn').addEventListener('click', goHome);
+$('#retryBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx); });
+
+$('#reportHomeBtn').addEventListener('click', goHome);
+$('#saveBtn').addEventListener('click', () => {
+  reports.unshift({ time: new Date().toLocaleString('zh-CN'), level: '第 ' + LEVELS.length + ' 关', score: score });
+  reports = reports.slice(0, 20);
+  LS.set('reports', reports);
+  sfx.ok(); toast('战报已保存到本地 📋');
+});
+
+$('#clearBtn').addEventListener('click', () => {
+  if(!playing || paused) return;
+  if(tray.length === 0){ toast('托盘已经空啦 🧽'); return; }
+  clearTray(); sfx.click(); toast('托盘已清空 🧽');
+});
+
+$$('.overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if(e.target !== o) return;
+    if(o.id === 'settingsModal' || o.id === 'guideModal' || o.id === 'selectModal'){
+      o.classList.remove('show');
+      if(o.id === 'selectModal') sfx.click();
+    }
+  });
+});
+
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden && playing && !paused){ $('#pauseBtn').click(); }
+});
+
+/* ---------- 初始化 ---------- */
+refreshHome();
+refreshSoundBtns();
+buildGrid();
+newOrder();
+})();
+</script>
+</body>
+</html>
