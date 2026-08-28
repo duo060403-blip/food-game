@@ -2,126 +2,304 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FFF6EA">
-<title>爆忙！一人食堂 🍽️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFE9D3">
+<meta name="format-detection" content="telephone=no">
+<title>爆忙！一人食堂 🍳</title>
 <style>
   :root{
-    --cream:#FFF6EA;
-    --card:#FFFDF8;
-    --coral:#FF7E67;
-    --coral-deep:#F0644B;
-    --yellow:#FFD166;
-    --brown:#5B3A29;
-    --sub:#C98F6B;
-    --line:#FFE0C4;
-    --shadow:0 6px 18px rgba(214,150,102,.20);
+    --bg1:#FFF6EC;
+    --bg2:#FFE8D0;
+    --bg3:#FFD9B6;
+    --card:#FFFFFF;
+    --ink:#4A2A18;
+    --ink2:#8A6A52;
+    --ink3:#B99A80;
+    --primary:#FF7A45;
+    --primary-deep:#F4581E;
+    --primary-soft:#FFE9DC;
+    --amber:#FFB03A;
+    --amber-soft:#FFF1D6;
+    --mint:#2FBF8F;
+    --mint-soft:#DFF7EC;
+    --red:#FF5A5A;
+    --line:#FFE7D5;
+    --shadow-card:0 10px 30px -8px rgba(244,88,30,.16);
+    --shadow-btn:0 12px 24px -6px rgba(244,88,30,.45);
+    --r-lg:28px;
+    --r-md:20px;
+    --r-sm:14px;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
     background:
-      radial-gradient(circle at 15% 20%, #FFE9C9 0%, transparent 45%),
-      radial-gradient(circle at 85% 80%, #FFD9DE 0%, transparent 45%),
-      var(--cream);
-    color:var(--brown);
+      radial-gradient(120% 90% at 85% -10%, #FFD9B8 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #FFC9A3 0%, transparent 55%),
+      linear-gradient(165deg, #FFF6EC 0%, #FFE8D0 45%, #FFD9B6 100%);
+    background-attachment:fixed;
+    color:var(--ink);
     overflow-x:hidden;
     user-select:none;-webkit-user-select:none;
+    touch-action:manipulation;
   }
-  .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-  .bg span{position:absolute;font-size:36px;opacity:.16;animation:float 9s ease-in-out infinite;}
-  .bg span:nth-child(1){top:6%;left:4%;animation-delay:0s;}
-  .bg span:nth-child(2){top:12%;right:6%;animation-delay:1.4s;}
-  .bg span:nth-child(3){bottom:16%;left:8%;animation-delay:2.6s;}
-  .bg span:nth-child(4){bottom:10%;right:12%;animation-delay:.8s;}
-  .bg span:nth-child(5){top:48%;left:2%;animation-delay:3.4s;}
-  .bg span:nth-child(6){top:52%;right:2%;animation-delay:2s;}
-  @keyframes float{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-16px) rotate(6deg);}}
-  .game{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:14px 14px 22px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:12px;}
-  .top-bar{display:flex;gap:10px;}
-  .score-box,.timer-box{flex:1;background:var(--card);border:3px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:10px 12px;}
-  .label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:1px;}
-  .score-box .value{font-size:28px;font-weight:900;color:var(--coral);line-height:1.1;}
-  .score-box .value.bump{animation:bump .35s ease;}
-  .timer-box{text-align:right;}
-  .timer-box .value{font-size:22px;font-weight:900;line-height:1.1;}
-  .timer-track{margin-top:6px;height:12px;background:#F7E3CF;border-radius:99px;overflow:hidden;}
-  .timer-fill{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--yellow),var(--coral));transition:width .1s linear;}
-  .timer-fill.danger{background:linear-gradient(90deg,var(--coral),#E63946);animation:blink .5s steps(2) infinite;}
-  @keyframes blink{50%{opacity:.55;}}
-  .order-area{position:relative;background:var(--card);border:3px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:12px 14px;}
+  .hidden{display:none!important;}
+  button{font-family:inherit;border:none;cursor:pointer;touch-action:manipulation;}
+  .blob{position:fixed;border-radius:50%;filter:blur(64px);opacity:.55;z-index:0;pointer-events:none;}
+  .blob.a{width:360px;height:360px;background:#FFB27D;top:-140px;right:-90px;}
+  .blob.b{width:320px;height:320px;background:#FFC98F;bottom:-120px;left:-110px;}
+  .blob.c{width:240px;height:240px;background:#FF9E6B;top:42%;left:-130px;opacity:.4;}
+  .bg-emojis{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .bg-emojis span{position:absolute;font-size:34px;opacity:.14;animation:floaty 9s ease-in-out infinite;}
+  .bg-emojis span:nth-child(1){top:8%;left:6%;animation-delay:0s;}
+  .bg-emojis span:nth-child(2){top:15%;right:7%;animation-delay:1.4s;}
+  .bg-emojis span:nth-child(3){bottom:14%;left:9%;animation-delay:2.6s;}
+  .bg-emojis span:nth-child(4){bottom:8%;right:13%;animation-delay:.8s;}
+  .bg-emojis span:nth-child(5){top:52%;left:2%;animation-delay:3.4s;}
+  .bg-emojis span:nth-child(6){top:56%;right:2%;animation-delay:2s;}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-16px) rotate(6deg);}}
+  .screen{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:18px 16px 28px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:14px;animation:screenIn .35s ease both;}
+  @keyframes screenIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  .card{background:var(--card);border-radius:var(--r-md);box-shadow:var(--shadow-card),inset 0 1px 0 rgba(255,255,255,.9);}
+  .g-text{background:linear-gradient(135deg,#FF9A5C,#F4581E);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .label{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1px;}
+  .icon-btn{width:44px;height:44px;border-radius:16px;background:var(--card);box-shadow:var(--shadow-card);font-size:20px;display:grid;place-items:center;flex-shrink:0;transition:transform .12s;}
+  .icon-btn:active{transform:scale(.9);}
+  .btn-primary{
+    width:100%;padding:16px;border-radius:999px;font-size:18px;font-weight:900;color:#fff;letter-spacing:2px;
+    background:linear-gradient(135deg,#FFB35C 0%,#FF7A45 55%,#F4581E 100%);
+    box-shadow:var(--shadow-btn),inset 0 2px 0 rgba(255,255,255,.4);
+    transition:transform .12s,box-shadow .12s;
+  }
+  .btn-primary:active{transform:scale(.96);box-shadow:0 6px 14px -4px rgba(244,88,30,.5),inset 0 2px 0 rgba(255,255,255,.4);}
+  .btn-secondary{
+    padding:15px 18px;border-radius:999px;font-size:15px;font-weight:900;color:var(--primary-deep);
+    background:var(--primary-soft);border:2px solid #FFD3BC;
+    transition:transform .12s;
+  }
+  .btn-secondary:active{transform:scale(.95);}
+  .btn-secondary.saved{color:#1C9E6B;background:var(--mint-soft);border-color:#B8E8D3;}
+  .btn-ghost{background:transparent;color:var(--ink2);font-weight:800;font-size:14px;padding:10px;border-radius:12px;}
+  .btn-ghost:active{transform:scale(.95);}
+  .btn-ghost.small{font-size:13px;color:var(--ink3);}
+  .micro{font-size:11px;color:var(--ink3);text-align:center;letter-spacing:1px;}
+  .sound-btn{position:fixed;top:14px;right:14px;z-index:20;}
+  .hero{text-align:center;padding:14px 0 2px;}
+  .logo-badge{
+    width:92px;height:92px;margin:0 auto 14px;border-radius:30px;display:grid;place-items:center;font-size:46px;
+    background:linear-gradient(145deg,#FFE3C7,#FFC08C);
+    box-shadow:0 14px 30px -8px rgba(244,88,30,.35),inset 0 2px 0 rgba(255,255,255,.7);
+    animation:bob 3.2s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-7px) rotate(3deg);}}
+  .hero h1{font-size:32px;font-weight:900;letter-spacing:4px;line-height:1.2;}
+  .hero .sub{font-size:13px;color:var(--ink2);margin-top:8px;letter-spacing:1px;line-height:1.6;}
+  .best-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:var(--r-md);}
+  .best-label{font-size:12px;color:var(--ink2);font-weight:800;letter-spacing:1px;}
+  .best-value{font-size:36px;font-weight:900;line-height:1.15;}
+  .best-rank{padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:900;color:var(--primary-deep);background:var(--primary-soft);white-space:nowrap;}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .feat{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px 14px;text-align:center;border-radius:var(--r-md);}
+  .feat .feat-ic{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;font-size:24px;margin-bottom:2px;}
+  .feat .ic-1{background:#FFEFE0;}
+  .feat .ic-2{background:var(--mint-soft);}
+  .feat .ic-3{background:var(--amber-soft);}
+  .feat b{font-size:13px;font-weight:900;}
+  .feat span{font-size:10.5px;color:var(--ink3);font-weight:600;line-height:1.5;}
+  .guide{padding:18px 18px 16px;border-radius:var(--r-md);}
+  .guide-title{font-size:15px;font-weight:900;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .guide ol{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .guide li{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;line-height:1.7;color:var(--ink2);font-weight:600;}
+  .guide .step{flex-shrink:0;width:22px;height:22px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff;background:linear-gradient(135deg,#FFB35C,#F4581E);margin-top:1px;}
+  .start-wrap{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:10px;}
+  .hud{display:flex;align-items:stretch;gap:10px;}
+  .kpi-card{flex:1;padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:8px;justify-content:center;}
+  .kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .level-chip{font-size:12.5px;font-weight:900;color:var(--primary-deep);background:var(--primary-soft);padding:5px 10px;border-radius:999px;white-space:nowrap;}
+  .kpi-text{font-size:12px;font-weight:900;color:var(--ink2);white-space:nowrap;}
+  .bar-track{height:9px;border-radius:99px;background:#F7E5D4;overflow:hidden;}
+  .bar-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#FFB35C,#FF7A45);transition:width .25s ease;}
+  .bar-fill.done{background:linear-gradient(90deg,#3ECF8E,#23A97B);}
+  .row2{display:grid;grid-template-columns:1fr 1.35fr;gap:10px;}
+  .score-card{padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:2px;justify-content:center;}
+  .score-value{font-size:30px;font-weight:900;line-height:1.1;}
+  .score-value.bump{animation:bump .35s ease;}
+  .timer-card{padding:12px 14px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:7px;justify-content:center;}
+  .timer-row{display:flex;align-items:center;gap:10px;}
+  .timer-value{font-size:22px;font-weight:900;line-height:1;min-width:44px;}
+  .timer-value.danger{color:var(--red);}
+  .timer-bar{flex:1;height:9px;border-radius:99px;background:#F7E5D4;overflow:hidden;}
+  .timer-fill{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#FFB35C,#FF7A45);transition:width .1s linear;}
+  .timer-fill.danger{background:linear-gradient(90deg,#FF7A45,#FF5A5A);animation:blink .5s steps(2) infinite;}
+  @keyframes blink{50%{opacity:.5;}}
+  .order-area{position:relative;padding:14px;border-radius:var(--r-lg);}
   .order-area.burst{animation:pop .45s cubic-bezier(.34,1.56,.64,1);}
-  .order-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-  .customer{width:52px;height:52px;border-radius:50%;background:#FFF3E2;border:2px solid var(--line);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 -3px 0 rgba(214,150,102,.15);}
-  .order-title{font-weight:900;font-size:16px;}
-  .order-sub{font-size:12px;color:var(--sub);}
+  .order-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .customer{width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,#FFF3E6,#FFE3C7);border:2px solid var(--line);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 -3px 0 rgba(214,150,102,.18);}
+  .order-title{font-weight:900;font-size:15px;letter-spacing:1px;}
+  .order-sub{font-size:11.5px;color:var(--ink3);font-weight:600;margin-top:2px;}
   .order-items{display:flex;gap:10px;flex-wrap:wrap;min-height:66px;align-items:center;}
-  .order-chip{display:flex;flex-direction:column;align-items:center;gap:2px;background:#FFF8EC;border:2px dashed #F5C79A;border-radius:14px;padding:7px 12px;animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
-  .order-chip .e{font-size:28px;}
-  .order-chip .n{font-size:12px;font-weight:800;}
+  .order-chip{display:flex;flex-direction:column;align-items:center;gap:3px;background:#FFF8EE;border:2px dashed #F5C79A;border-radius:16px;padding:8px 13px;animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
+  .order-chip .e{font-size:28px;line-height:1;}
+  .order-chip .n{font-size:11.5px;font-weight:900;color:var(--ink2);}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .food-btn{position:relative;aspect-ratio:1/1;border:none;border-radius:20px;background:var(--card);border:3px solid var(--line);box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .12s,box-shadow .12s,background .15s,border-color .15s;touch-action:manipulation;font-family:inherit;}
+  .food-btn{position:relative;aspect-ratio:1/1;border-radius:22px;background:var(--card);border:2.5px solid var(--line);box-shadow:var(--shadow-card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:transform .12s,box-shadow .12s,background .15s,border-color .15s;}
   .food-btn:active{transform:scale(.92);}
-  .food-btn:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(214,150,102,.3);}
-  .food-btn:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;}
-  .food-btn .e{font-size:clamp(32px,10vw,46px);transition:transform .15s;line-height:1;}
-  .food-btn .n{font-size:12px;font-weight:800;color:var(--sub);}
+  .food-btn:hover{transform:translateY(-3px);}
+  .food-btn .e{font-size:clamp(32px,10vw,46px);line-height:1;transition:transform .15s;}
+  .food-btn .n{font-size:11.5px;font-weight:900;color:var(--ink3);}
   .food-btn.hint{animation:hintPulse 1.5s ease-in-out infinite;}
-  .food-btn.picked{background:#FFE9D8;border-color:var(--coral);}
-  .food-btn.picked .e{transform:scale(1.15);}
+  .food-btn.picked{background:#FFF0E5;border-color:var(--primary);}
+  .food-btn.picked .e{transform:scale(1.12);}
+  .food-btn.picked::after{content:'✓';position:absolute;top:6px;right:8px;width:21px;height:21px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;animation:pop .3s cubic-bezier(.34,1.56,.64,1);}
   .food-btn.wrong{animation:shake .4s ease;}
-  @keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,.5);}50%{box-shadow:0 0 0 9px rgba(255,209,102,0);}}
+  @keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,176,58,.55);}50%{box-shadow:0 0 0 9px rgba(255,176,58,0);}}
   @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
-  @keyframes pop{0%{transform:scale(.6);}60%{transform:scale(1.08);}100%{transform:scale(1);}}
-  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.4);}100%{transform:scale(1);}}
+  @keyframes pop{0%{transform:scale(.6);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.35);}100%{transform:scale(1);}}
   .tray{display:flex;align-items:center;gap:8px;}
-  .tray-items{flex:1;min-height:46px;background:var(--card);border:3px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px 10px;display:flex;align-items:center;gap:6px;font-size:24px;overflow-x:auto;color:var(--sub);font-weight:700;}
-  .clear-btn{flex-shrink:0;background:#FFE9D8;border:3px solid var(--coral);color:var(--coral);font-weight:900;border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow);font-size:14px;font-family:inherit;touch-action:manipulation;}
+  .tray-items{flex:1;min-height:48px;background:var(--card);border:2.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow-card);padding:7px 12px;display:flex;align-items:center;gap:7px;overflow-x:auto;color:var(--ink3);font-weight:800;font-size:13px;}
+  .tray-items span{font-size:24px;}
+  .clear-btn{flex-shrink:0;background:#FFF0EC;border:2px solid #FFC4B4;color:var(--red);font-weight:900;border-radius:16px;padding:11px 14px;font-size:13px;transition:transform .12s;}
   .clear-btn:active{transform:scale(.94);}
-  .hint-text{text-align:center;font-size:12px;color:var(--sub);font-weight:600;}
-  .toast{position:fixed;left:50%;top:14%;transform:translate(-50%,-10px);background:var(--card);border:3px solid var(--coral);color:var(--coral);font-weight:900;padding:9px 18px;border-radius:99px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:all .25s;z-index:40;font-size:14px;white-space:nowrap;}
+  .hint-text{text-align:center;font-size:11.5px;color:var(--ink3);font-weight:600;letter-spacing:.5px;}
+  .overlay{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:22px;background:rgba(74,42,24,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s;}
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .overlay.light{background:rgba(74,42,24,.28);}
+  .panel{transform:translateY(16px) scale(.94);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+  .overlay.show .panel{transform:none;}
+  .intro-card{width:min(320px,86vw);text-align:center;background:var(--card);border-radius:var(--r-lg);padding:30px 24px;box-shadow:0 24px 60px -12px rgba(74,42,24,.4);}
+  .intro-emoji{font-size:56px;animation:bob 1.6s ease-in-out infinite;}
+  .intro-title{font-size:26px;font-weight:900;letter-spacing:4px;margin-top:10px;}
+  .intro-name{display:inline-block;margin-top:8px;padding:6px 16px;border-radius:999px;background:var(--primary-soft);color:var(--primary-deep);font-size:14px;font-weight:900;}
+  .intro-kpi{font-size:13px;color:var(--ink2);margin-top:14px;font-weight:700;}
+  .intro-kpi b{color:var(--primary-deep);font-size:16px;}
+  .intro-time{font-size:13px;color:var(--ink2);margin-top:6px;font-weight:700;}
+  .intro-time b{color:var(--ink);font-size:15px;}
+  .pause-card{width:min(320px,86vw);text-align:center;background:var(--card);border-radius:var(--r-lg);padding:30px 24px 22px;box-shadow:0 24px 60px -12px rgba(74,42,24,.4);display:flex;flex-direction:column;gap:8px;align-items:center;}
+  .pause-emoji{font-size:52px;}
+  .pause-card h2{font-size:22px;font-weight:900;letter-spacing:2px;}
+  .pause-card p{font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:10px;}
+  .pause-card .btn-primary{width:100%;margin-top:6px;}
+  .report-card{width:min(350px,92vw);border-radius:32px;background:var(--card);overflow:hidden;box-shadow:0 30px 70px -14px rgba(74,42,24,.45);}
+  .report-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 20px;background:linear-gradient(135deg,#FFB35C 0%,#FF7A45 60%,#F4581E 100%);}
+  .report-head span{color:#fff;font-size:13px;font-weight:900;letter-spacing:1px;}
+  .report-stamp{border:2px solid rgba(255,255,255,.9);border-radius:8px;padding:3px 9px;transform:rotate(-6deg);font-size:11.5px!important;letter-spacing:3px;}
+  .report-body{padding:22px 20px 20px;text-align:center;}
+  .report-avatar{width:78px;height:78px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:40px;background:linear-gradient(145deg,#FFF3E6,#FFE3C7);border:3px solid var(--line);box-shadow:0 10px 24px -8px rgba(244,88,30,.3);}
+  .report-rank{font-size:28px;font-weight:900;letter-spacing:2px;margin-top:12px;}
+  .report-tag{font-size:12px;color:var(--ink2);font-weight:700;margin-top:6px;}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+  .stat{background:#FFF7F0;border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;gap:3px;}
+  .stat span{font-size:10.5px;color:var(--ink3);font-weight:800;letter-spacing:1px;}
+  .stat b{font-size:20px;font-weight:900;line-height:1.2;}
+  .stat .small{font-size:14px;}
+  .rank-progress{margin-top:16px;text-align:left;}
+  .rp-top{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);font-weight:800;margin-bottom:7px;}
+  .rp-fill{background:linear-gradient(90deg,#FFB35C,#FF7A45);}
+  .report-actions{display:flex;gap:10px;margin-top:20px;}
+  .report-actions .btn-primary{flex:1;padding:15px 10px;font-size:16px;letter-spacing:1px;}
+  .report-actions .btn-secondary{flex:1;padding:14px 10px;font-size:14px;}
+  .report-home{margin-top:8px;width:100%;text-align:center;}
+  .toast{position:fixed;left:50%;top:12%;transform:translate(-50%,-10px);background:var(--card);border-radius:999px;padding:10px 20px;font-size:13.5px;font-weight:900;color:var(--ink);box-shadow:0 14px 30px -6px rgba(74,42,24,.28);opacity:0;pointer-events:none;transition:all .25s;z-index:90;white-space:nowrap;border:2px solid var(--line);}
   .toast.show{opacity:1;transform:translate(-50%,0);}
-  .spark{position:fixed;font-size:22px;pointer-events:none;z-index:30;animation:fly .7s ease-out forwards;}
-  @keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(20deg);opacity:0;}}
-  .modal{position:fixed;inset:0;background:rgba(91,58,41,.45);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:50;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px;}
-  .modal.show{opacity:1;pointer-events:auto;}
-  .modal-card{background:var(--card);border:4px solid var(--line);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:28px 34px;text-align:center;transform:scale(.8);transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:320px;width:100%;}
-  .modal.show .modal-card{transform:scale(1);}
-  .modal-card .big{font-size:54px;}
-  .modal-card h2{margin:8px 0 6px;font-size:24px;}
-  .final-score{font-size:56px;font-weight:900;color:var(--coral);line-height:1.1;}
-  .rank-text{font-size:13px;color:var(--sub);margin-top:6px;font-weight:700;}
-  .replay-btn{margin-top:18px;width:100%;background:linear-gradient(135deg,var(--yellow),var(--coral));color:#fff;border:none;font-size:18px;font-weight:900;padding:13px 28px;border-radius:99px;cursor:pointer;box-shadow:0 8px 18px rgba(255,126,103,.4);font-family:inherit;touch-action:manipulation;}
-  .replay-btn:active{transform:scale(.96);}
-  @media (max-width:420px){
-    .game{padding:10px 10px 18px;gap:10px;}
+  .confetti{position:fixed;width:9px;height:14px;border-radius:3px;pointer-events:none;z-index:85;animation:confettiFly 1.1s ease-out forwards;}
+  @keyframes confettiFly{to{transform:translate(var(--dx),var(--dy)) rotate(340deg);opacity:0;}}
+  @media (max-width:380px){
+    .screen{padding:14px 12px 24px;gap:12px;}
+    .hero h1{font-size:28px;letter-spacing:3px;}
+    .best-value{font-size:32px;}
+    .feat{padding:13px 6px 12px;}
     .grid{gap:8px;}
-    .food-btn{border-radius:16px;}
-    .order-chip{padding:5px 9px;}
-    .customer{width:46px;height:46px;font-size:26px;}
+    .food-btn{border-radius:18px;}
   }
 </style>
 </head>
 <body>
-<div class="bg">
-  <span>🍔</span><span>🍣</span><span>🍜</span><span>🧋</span><span>🍢</span><span>🍰</span>
-</div>
+<div class="blob a"></div>
+<div class="blob b"></div>
+<div class="blob c"></div>
+<div class="bg-emojis"><span>🍜</span><span>🍢</span><span>🍰</span><span>🧋</span><span>🍔</span><span>🍣</span></div>
 
-<div class="game">
-  <header class="top-bar">
-    <div class="score-box">
-      <div class="label">🍭 得分</div>
-      <div class="value" id="score">0</div>
+<main id="screenHome" class="screen home">
+  <button id="soundBtnHome" class="icon-btn sound-btn sound-icon" title="音效开关">🔊</button>
+  <div class="hero">
+    <div class="logo-badge">🍳</div>
+    <h1>爆忙！<span class="g-text">一人食堂</span></h1>
+    <p class="sub">一个人，也要把整间食堂经营得热气腾腾</p>
+  </div>
+
+  <div class="best-card card">
+    <div>
+      <div class="best-label">🏆 历史最高分</div>
+      <div class="best-value g-text" id="bestScore">0</div>
     </div>
-    <div class="timer-box">
-      <div class="label">⏱️ 剩余时间</div>
-      <div class="value" id="time">60s</div>
-      <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="best-rank" id="bestRank">🌱 见习店员</div>
+  </div>
+
+  <div class="features">
+    <div class="feat card">
+      <div class="feat-ic ic-1">👀</div>
+      <b>看准订单</b>
+      <span>读懂顾客需求</span>
+    </div>
+    <div class="feat card">
+      <div class="feat-ic ic-2">🍳</div>
+      <b>连消上菜</b>
+      <span>凑齐组合秒出餐</span>
+    </div>
+    <div class="feat card">
+      <div class="feat-ic ic-3">📸</div>
+      <b>晒出战报</b>
+      <span>生成营业战报</span>
+    </div>
+  </div>
+
+  <div class="guide card">
+    <div class="guide-title">📖 新店长上岗指南</div>
+    <ol>
+      <li><span class="step">1</span>顾客想吃什么，发光的格子就是答案，点齐组合自动上菜</li>
+      <li><span class="step">2</span>每关在限定时间内达成 KPI 才能晋级，越到后面越魔鬼</li>
+      <li><span class="step">3</span>点错会清空托盘，稳住手速，更稳住心态</li>
+    </ol>
+  </div>
+
+  <div class="start-wrap">
+    <button id="startBtn" class="btn-primary">🛎️ 开始营业</button>
+    <p class="micro">无需登录 · 离线可玩</p>
+  </div>
+</main><!-- ======== 游戏界面 ======== -->
+<main id="screenGame" class="screen game-screen hidden">
+  <header class="hud">
+    <div class="kpi-card card">
+      <div class="kpi-top">
+        <span class="level-chip" id="levelChip">第 1/10 关 · 新手试业</span>
+        <span class="kpi-text" id="kpiText">KPI 0/15</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="kpiFill"></div></div>
+    </div>
+    <div class="hud-actions" style="display:flex;gap:8px;">
+      <button id="soundBtnGame" class="icon-btn sound-icon" title="音效开关">🔊</button>
+      <button id="pauseBtn" class="icon-btn" title="暂停">⏸️</button>
     </div>
   </header>
 
-  <section class="order-area" id="orderArea">
+  <div class="row2">
+    <div class="score-card card">
+      <span class="label">🍭 得分</span>
+      <div class="score-value g-text" id="score">0</div>
+    </div>
+    <div class="timer-card card">
+      <span class="label">⏱️ 营业倒计时</span>
+      <div class="timer-row">
+        <div class="timer-value" id="time">60s</div>
+        <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="order-area card" id="orderArea">
     <div class="order-head">
       <div class="customer" id="customer">👧</div>
       <div>
@@ -139,23 +317,87 @@
     <button class="clear-btn" id="clearBtn">🗑️ 清空</button>
   </div>
   <p class="hint-text">💡 按订单点餐，凑齐组合自动上菜；点错会清空托盘哦～</p>
+</main>
+
+<!-- ======== 关卡开场 ======== -->
+<div id="levelIntro" class="overlay light">
+  <div class="panel intro-card">
+    <div class="intro-emoji" id="introEmoji">🍳</div>
+    <div class="intro-title g-text" id="introTitle">第 1 关</div>
+    <div class="intro-name" id="introName">新手试业</div>
+    <div class="intro-kpi">本关 KPI：<b id="introKpi">15</b> 分</div>
+    <div class="intro-time">营业时间 <b id="introTime">60</b> 秒</div>
+  </div>
+</div>
+
+<!-- ======== 暂停 ======== -->
+<div id="pauseOverlay" class="overlay">
+  <div class="panel pause-card">
+    <div class="pause-emoji">☕</div>
+    <h2>营业暂停中</h2>
+    <p>休息一下，回来继续战斗</p>
+    <button id="resumeBtn" class="btn-primary">▶️ 继续营业</button>
+    <button id="quitBtn" class="btn-ghost">🏠 返回首页</button>
+  </div>
+</div>
+
+<!-- ======== 营业战报 ======== -->
+<div id="reportModal" class="overlay">
+  <div class="panel report-card">
+    <div class="report-head">
+      <span id="reportDate">8月28日 · 营业战报</span>
+      <span class="report-stamp">已打烊</span>
+    </div>
+    <div class="report-body">
+      <div class="report-avatar" id="reportAvatar">🍳</div>
+      <div class="report-rank g-text" id="reportRank">资深主厨</div>
+      <div class="report-tag" id="reportTag">今天也是元气满满的一天！</div>
+      <div class="stats">
+        <div class="stat"><span>营业收入总分</span><b id="reportIncome">0</b></div>
+        <div class="stat"><span>历史最高分</span><b id="reportBest">0</b></div>
+        <div class="stat"><span>达成关卡</span><b class="small" id="reportLevel">第 1 关</b></div>
+        <div class="stat"><span>打烊时间</span><b class="small" id="reportTime">20:47</b></div>
+      </div>
+      <div class="rank-progress">
+        <div class="rp-top"><span id="rpText">距下一段位还差 0 分</span><span id="rpPct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill rp-fill" id="rpFill"></div></div>
+      </div>
+      <div class="report-actions">
+        <button id="replayBtn" class="btn-primary">🔁 再开一局</button>
+        <button id="saveBtn" class="btn-secondary">📸 保存战报</button>
+      </div>
+      <button id="homeBtn" class="btn-ghost small report-home">🏠 返回首页</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <div class="big">🍳</div>
-    <h2>打烊啦！</h2>
-    <div class="label">本次得分</div>
-    <div class="final-score" id="finalScore">0</div>
-    <p class="rank-text" id="rankText"></p>
-    <button class="replay-btn" id="replayBtn">🔁 再玩一次</button>
-  </div>
-</div>
-
 <script>
-const FOODS = [
+(function(){
+'use strict';
+
+var LEVELS = [
+  { name:'新手试业', kpi:15, time:60 },
+  { name:'小店迎客', kpi:17, time:60 },
+  { name:'渐入佳境', kpi:19, time:58 },
+  { name:'熟能生巧', kpi:20, time:58 },
+  { name:'效率之星', kpi:21, time:56 },
+  { name:'得心应手', kpi:22, time:56 },
+  { name:'金牌店员', kpi:23, time:54 },
+  { name:'独当一面', kpi:24, time:54 },
+  { name:'王牌主厨', kpi:25, time:52 },
+  { name:'魔鬼经理', kpi:27, time:52 }
+];
+var RANKS = [
+  { min:160, name:'五星主厨', icon:'👑' },
+  { min:120, name:'金牌店长', icon:'🏆' },
+  { min:80,  name:'王牌主厨', icon:'🔥' },
+  { min:50,  name:'资深主厨', icon:'🍳' },
+  { min:25,  name:'熟练店员', icon:'💪' },
+  { min:0,   name:'见习店员', icon:'🌱' }
+];
+var FOODS = [
   { id:'burger',   emoji:'🍔', name:'汉堡' },
   { id:'sushi',    emoji:'🍣', name:'寿司' },
   { id:'ramen',    emoji:'🍜', name:'拉面' },
@@ -166,217 +408,430 @@ const FOODS = [
   { id:'icecream', emoji:'🍦', name:'冰淇淋' },
   { id:'pancake',  emoji:'🥞', name:'松饼' }
 ];
-const CUSTOMERS = ['👧','🧒','👦','👩','🧑','👨','👵','👴','🧑‍🍳'];
+var CUSTOMERS = ['👧','🧒','👦','👩','🧑','👨','👵','👴','🧑‍🍳'];
 
-const gridEl      = document.getElementById('grid');
-const orderArea   = document.getElementById('orderArea');
-const orderItems  = document.getElementById('orderItems');
-const customerEl  = document.getElementById('customer');
-const trayEl      = document.getElementById('tray');
-const clearBtn    = document.getElementById('clearBtn');
-const scoreEl     = document.getElementById('score');
-const timeEl      = document.getElementById('time');
-const timerFill   = document.getElementById('timerFill');
-const toastEl     = document.getElementById('toast');
-const modalEl     = document.getElementById('modal');
-const finalScoreEl= document.getElementById('finalScore');
-const rankTextEl  = document.getElementById('rankText');
-const replayBtn   = document.getElementById('replayBtn');
+function $(id){ return document.getElementById(id); }
 
-let order=[], selected=[], score=0, timeLeft=60, gameOver=false, lock=false, timerId=null, toastTimer=null;
+var els = {
+  screenHome: $('screenHome'), screenGame: $('screenGame'),
+  bestScore: $('bestScore'), bestRank: $('bestRank'),
+  startBtn: $('startBtn'),
+  levelChip: $('levelChip'), kpiText: $('kpiText'), kpiFill: $('kpiFill'),
+  score: $('score'), time: $('time'), timerFill: $('timerFill'),
+  orderArea: $('orderArea'), orderItems: $('orderItems'), customer: $('customer'),
+  grid: $('grid'), tray: $('tray'), clearBtn: $('clearBtn'),
+  pauseBtn: $('pauseBtn'), pauseOverlay: $('pauseOverlay'), resumeBtn: $('resumeBtn'), quitBtn: $('quitBtn'),
+  levelIntro: $('levelIntro'), introEmoji: $('introEmoji'), introTitle: $('introTitle'),
+  introName: $('introName'), introKpi: $('introKpi'), introTime: $('introTime'),
+  reportModal: $('reportModal'), reportDate: $('reportDate'), reportAvatar: $('reportAvatar'),
+  reportRank: $('reportRank'), reportTag: $('reportTag'), reportIncome: $('reportIncome'),
+  reportBest: $('reportBest'), reportLevel: $('reportLevel'), reportTime: $('reportTime'),
+  rpText: $('rpText'), rpPct: $('rpPct'), rpFill: $('rpFill'),
+  replayBtn: $('replayBtn'), saveBtn: $('saveBtn'), homeBtn: $('homeBtn'),
+  toast: $('toast')
+};
+
+var store = {
+  get: function(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+var best = Number(store.get('canteen_best',0)) || 0;
+var sound = store.get('canteen_sound', true) !== false;
+
+var S = {
+  screen:'home', level:0, score:0, levelScore:0, timeLeft:0,
+  order:[], selected:[],
+  running:false, paused:false, lock:false,
+  timerId:null, runStart:0, latest:null
+};
+var toastTimer=null, introTimer=null;
 
 function shuffle(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=a[i]; a[i]=a[j]; a[j]=t;
   }
   return a;
 }
+function rankOf(total){
+  for(var i=0;i<RANKS.length;i++){ if(total>=RANKS[i].min) return RANKS[i]; }
+  return RANKS[RANKS.length-1];
+}
+function rankProgress(total){
+  var cur=rankOf(total), idx=-1;
+  for(var i=0;i<RANKS.length;i++){ if(RANKS[i]===cur){ idx=i; break; } }
+  var next=idx>0?RANKS[idx-1]:null;
+  if(!next) return { text:'已是最高段位「'+cur.name+'」', pct:100 };
+  var pct=Math.max(0,Math.min(100,((total-cur.min)/(next.min-cur.min))*100));
+  return { text:'距「'+next.name+'」还差 '+(next.min-total)+' 分', pct:Math.round(pct) };
+}
+function pad(n){ return n<10?'0'+n:''+n; }
+function nowClock(){ var d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+function nowDate(){ var d=new Date(); return (d.getMonth()+1)+'月'+d.getDate()+'日'; }
+function showToast(msg){
+  els.toast.textContent=msg;
+  els.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ els.toast.classList.remove('show'); },1200);
+}
+function showScreen(name){
+  S.screen=name;
+  els.screenHome.classList.toggle('hidden', name!=='home');
+  els.screenGame.classList.toggle('hidden', name!=='game');
+  if(name==='home') refreshBest();
+}
+
+var audioCtx=null;
+function beep(f,d,t,v){
+  if(!sound) return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=t; o.frequency.value=f;
+    g.gain.setValueAtTime(v,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+d);
+  }catch(e){}
+}
+function sClick(){ beep(520,.05,'triangle',.10); }
+function sPick(){ beep(560,.05,'triangle',.10); }
+function sGood(){ beep(660,.08,'triangle',.12); setTimeout(function(){ beep(880,.10,'triangle',.12); },70); }
+function sPass(){ beep(660,.08,'triangle',.12); setTimeout(function(){ beep(880,.08,'triangle',.12); },80); setTimeout(function(){ beep(1046,.12,'triangle',.12); },160); }
+function sBad(){ beep(200,.18,'sawtooth',.06); }
+function sWin(){ [523,659,784,1046].forEach(function(f,i){ setTimeout(function(){ beep(f,.16,'triangle',.12); },i*120); }); }
+function sStart(){ [523,784].forEach(function(f,i){ setTimeout(function(){ beep(f,.1,'triangle',.12); },i*90); }); }
+
+function syncSoundIcons(){
+  var icons=document.querySelectorAll('.sound-icon');
+  for(var i=0;i<icons.length;i++){ icons[i].textContent=sound?'🔊':'🔇'; }
+}
+
+function refreshBest(){
+  els.bestScore.textContent=best;
+  var r=rankOf(best);
+  els.bestRank.textContent=r.icon+' '+r.name;
+}
 
 function buildGrid(){
-  gridEl.innerHTML='';
-  FOODS.forEach(f=>{
-    const b=document.createElement('button');
+  els.grid.innerHTML='';
+  FOODS.forEach(function(f){
+    var b=document.createElement('button');
     b.className='food-btn';
-    b.dataset.id=f.id;
+    b.setAttribute('data-id',f.id);
     b.innerHTML='<span class="e">'+f.emoji+'</span><span class="n">'+f.name+'</span>';
-    b.addEventListener('click',()=>onFoodClick(f.id));
-    gridEl.appendChild(b);
+    b.addEventListener('click',function(){ onFoodClick(f.id); });
+    els.grid.appendChild(b);
   });
 }
 
 function newOrder(){
-  const picked=shuffle(FOODS).slice(0,2+Math.floor(Math.random()*2)); // 2~3 种
-  order=picked.map(f=>f.id);
-  customerEl.textContent=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
-  orderItems.innerHTML='';
-  picked.forEach(f=>{
-    const chip=document.createElement('div');
+  var picked=shuffle(FOODS).slice(0,2+Math.floor(Math.random()*2));
+  S.order=picked.map(function(f){ return f.id; });
+  els.customer.textContent=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
+  els.orderItems.innerHTML='';
+  picked.forEach(function(f){
+    var chip=document.createElement('div');
     chip.className='order-chip';
     chip.innerHTML='<span class="e">'+f.emoji+'</span><span class="n">'+f.name+'</span>';
-    orderItems.appendChild(chip);
+    els.orderItems.appendChild(chip);
   });
-  document.querySelectorAll('.food-btn').forEach(b=>{
-    b.classList.toggle('hint',order.includes(b.dataset.id));
-  });
-  orderArea.classList.remove('burst');
-  selected=[];
+  var btns=document.querySelectorAll('.food-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.toggle('hint', S.order.indexOf(btns[i].getAttribute('data-id'))!==-1);
+  }
+  els.orderArea.classList.remove('burst');
+  S.selected=[];
   renderTray();
 }
 
 function renderTray(){
-  if(selected.length===0){
-    trayEl.innerHTML='👐 你的托盘是空的';
+  if(S.selected.length===0){
+    els.tray.innerHTML='👐 你的托盘是空的';
   }else{
-    trayEl.innerHTML='';
-    selected.forEach(id=>{
-      const f=FOODS.find(x=>x.id===id);
-      const s=document.createElement('span');
-      s.textContent=f.emoji;
-      trayEl.appendChild(s);
+    els.tray.innerHTML='';
+    S.selected.forEach(function(id){
+      for(var i=0;i<FOODS.length;i++){
+        if(FOODS[i].id===id){
+          var s=document.createElement('span');
+          s.textContent=FOODS[i].emoji;
+          els.tray.appendChild(s);
+          break;
+        }
+      }
     });
   }
-  document.querySelectorAll('.food-btn').forEach(b=>{
-    b.classList.toggle('picked',selected.includes(b.dataset.id));
-  });
+  var btns=document.querySelectorAll('.food-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.toggle('picked', S.selected.indexOf(btns[i].getAttribute('data-id'))!==-1);
+  }
 }
 
 function onFoodClick(id){
-  if(gameOver||lock) return;
-  const need =order.filter(x=>x===id).length;
-  const have =selected.filter(x=>x===id).length;
+  if(S.screen!=='game'||S.lock) return;
+  var need=0, have=0;
+  for(var i=0;i<S.order.length;i++){ if(S.order[i]===id) need++; }
+  for(var j=0;j<S.selected.length;j++){ if(S.selected[j]===id) have++; }
   if(need===0||have>=need){
     sBad();
-    const btn=document.querySelector('.food-btn[data-id="'+id+'"]');
-    if(btn){btn.classList.add('wrong');setTimeout(()=>btn.classList.remove('wrong'),450);}
-    selected=[];
+    var btn=document.querySelector('.food-btn[data-id="'+id+'"]');
+    if(btn){ btn.classList.add('wrong'); setTimeout(function(){ btn.classList.remove('wrong'); },450); }
+    S.selected=[];
     renderTray();
-    showToast(need===0 ? '这个不在订单里哦～' : '已经拿太多啦！');
+    showToast(need===0?'这个不在订单里哦～':'已经拿太多啦！');
     return;
   }
-  selected.push(id);
+  S.selected.push(id);
   sPick();
   renderTray();
   if(matchOrder()) success();
 }
 
 function matchOrder(){
-  return [...selected].sort().join(',')===[...order].sort().join(',');
+  return S.selected.slice().sort().join(',')===S.order.slice().sort().join(',');
 }
 
 function success(){
-  lock=true;
-  sGood();
-  score++;
-  scoreEl.textContent=score;
-  scoreEl.classList.remove('bump');
-  void scoreEl.offsetWidth;
-  scoreEl.classList.add('bump');
-  orderArea.classList.add('burst');
+  S.lock=true;
+  S.score++;
+  S.levelScore++;
+  els.score.textContent=S.score;
+  els.score.classList.remove('bump'); void els.score.offsetWidth; els.score.classList.add('bump');
+  els.orderArea.classList.add('burst');
   spawnSparks();
-  showToast('🎉 上菜成功 +1');
-  setTimeout(()=>{newOrder();lock=false;},420);
+  updateKpi();
+  var lv=LEVELS[S.level];
+  if(S.levelScore>=lv.kpi){
+    sPass();
+    showToast('🎉 KPI 达标！继续冲～');
+  }else{
+    sGood();
+    showToast('🎉 上菜成功 +1');
+  }
+  setTimeout(function(){ newOrder(); S.lock=false; },420);
+}
+
+function updateKpi(){
+  var lv=LEVELS[S.level];
+  els.kpiText.textContent='KPI '+S.levelScore+'/'+lv.kpi;
+  var pct=Math.min(100,(S.levelScore/lv.kpi)*100);
+  els.kpiFill.style.width=pct+'%';
+  els.kpiFill.classList.toggle('done', S.levelScore>=lv.kpi);
+}
+
+function updateTimer(){
+  var secs=Math.ceil(S.timeLeft);
+  els.time.textContent=secs+'s';
+  els.time.classList.toggle('danger', S.timeLeft<=10);
+  var lv=LEVELS[S.level];
+  els.timerFill.style.width=Math.max(0,(S.timeLeft/lv.time)*100)+'%';
+  els.timerFill.classList.toggle('danger', S.timeLeft<=10);
+}
+
+function updateHUD(){
+  var lv=LEVELS[S.level];
+  els.levelChip.textContent='第 '+(S.level+1)+'/'+LEVELS.length+' 关 · '+lv.name;
+  els.score.textContent=S.score;
+  updateKpi();
+  updateTimer();
+}
+
+function runTimer(){
+  clearInterval(S.timerId);
+  S.timerId=setInterval(function(){
+    S.timeLeft=Math.max(0,S.timeLeft-.1);
+    updateTimer();
+    if(S.timeLeft<=0){ clearInterval(S.timerId); endLevel(); }
+  },100);
+}
+
+function startLevel(i){
+  S.level=i;
+  S.levelScore=0;
+  S.selected=[];
+  clearInterval(S.timerId);
+  var lv=LEVELS[i];
+  S.timeLeft=lv.time;
+  newOrder();
+  updateHUD();
+  S.lock=true;
+  els.introEmoji.textContent=i===0?'🍳':'🔥';
+  els.introTitle.textContent='第 '+(i+1)+' 关';
+  els.introName.textContent=lv.name;
+  els.introKpi.textContent=lv.kpi;
+  els.introTime.textContent=lv.time;
+  els.levelIntro.classList.add('show');
+  clearTimeout(introTimer);
+  introTimer=setTimeout(function(){
+    els.levelIntro.classList.remove('show');
+    S.lock=false;
+    runTimer();
+  },1200);
+}
+
+function startRun(){
+  S.runStart=Date.now();
+  S.score=0;
+  S.running=true;
+  S.paused=false;
+  els.pauseOverlay.classList.remove('show');
+  els.reportModal.classList.remove('show');
+  showScreen('game');
+  startLevel(0);
+}
+
+function endLevel(){
+  var lv=LEVELS[S.level];
+  var passed=S.levelScore>=lv.kpi;
+  if(passed){
+    if(S.level===LEVELS.length-1){
+      sWin();
+      finishRun(true);
+    }else{
+      sPass();
+      showToast('🎉 达标晋级！');
+      setTimeout(function(){ startLevel(S.level+1); },900);
+    }
+  }else{
+    sBad();
+    finishRun(false);
+  }
+}
+
+function finishRun(victory){
+  S.running=false;
+  var total=S.score;
+  if(total>best){ best=total; store.set('canteen_best',best); }
+  var rank=rankOf(total);
+  var prog=rankProgress(total);
+  els.reportDate.textContent=nowDate()+' · 营业战报';
+  els.reportAvatar.textContent=victory?'🏆':rank.icon;
+  els.reportRank.textContent=victory?'完美收官 · '+rank.name:rank.name;
+  els.reportTag.textContent=victory?'整间食堂都被你经营得热热闹闹！':'今天也是元气满满的一天！';
+  els.reportIncome.textContent=total;
+  els.reportBest.textContent=best;
+  els.reportLevel.textContent=victory?'全通 '+LEVELS.length+' 关':'第 '+(S.level+1)+' 关';
+  els.reportTime.textContent=nowClock();
+  els.rpText.textContent=prog.text;
+  els.rpPct.textContent=prog.pct+'%';
+  els.rpFill.style.width=prog.pct+'%';
+  S.latest={
+    date:nowDate(), clock:nowClock(), total:total, best:best,
+    level:victory?'全通':'第 '+(S.level+1)+' 关', rank:rank.name, victory:victory
+  };
+  els.reportModal.classList.add('show');
+  spawnConfetti();
 }
 
 function spawnSparks(){
-  const rect=orderArea.getBoundingClientRect();
-  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
-  const emojis=['✨','⭐','💛','🍀','🎉'];
-  for(let i=0;i<10;i++){
-    const s=document.createElement('span');
-    s.className='spark';
+  var rect=els.orderArea.getBoundingClientRect();
+  var cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  var emojis=['✨','⭐','💛','🍀','🎉'];
+  for(var i=0;i<10;i++){
+    var s=document.createElement('span');
+    s.className='confetti';
     s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    const ang=Math.random()*Math.PI*2, dist=60+Math.random()*90;
+    s.style.background='transparent';
+    s.style.fontSize='20px';
+    s.style.width='auto'; s.style.height='auto'; s.style.borderRadius='0';
+    var ang=Math.random()*Math.PI*2, dist=60+Math.random()*90;
     s.style.setProperty('--dx',Math.cos(ang)*dist+'px');
     s.style.setProperty('--dy',Math.sin(ang)*dist+'px');
     s.style.left=cx+'px';
     s.style.top=cy+'px';
     document.body.appendChild(s);
-    setTimeout(()=>s.remove(),750);
+    (function(el){ setTimeout(function(){ el.remove(); },1150); })(s);
   }
 }
 
-function showToast(msg){
-  toastEl.textContent=msg;
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1100);
+function spawnConfetti(){
+  var colors=['#FF7A45','#FFB35C','#3ECF8E','#5BA7FF','#FF5A5A','#FFD166'];
+  for(var i=0;i<26;i++){
+    var c=document.createElement('span');
+    c.className='confetti';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    var ang=Math.random()*Math.PI*2, dist=80+Math.random()*160;
+    c.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+    c.style.setProperty('--dy',Math.sin(ang)*dist+'px');
+    c.style.left=(window.innerWidth/2)+'px';
+    c.style.top=(window.innerHeight/2)+'px';
+    document.body.appendChild(c);
+    (function(el){ setTimeout(function(){ el.remove(); },1150); })(c);
+  }
+}/* ---------- 交互 ---------- */
+function toggleSound(){
+  sound=!sound;
+  store.set('canteen_sound', sound);
+  syncSoundIcons();
+  if(sound) sClick();
 }
 
-clearBtn.addEventListener('click',()=>{
-  if(gameOver||lock) return;
-  selected=[];
+function togglePause(){
+  if(S.screen!=='game'||!S.running||S.lock) return;
+  if(S.paused){
+    S.paused=false;
+    els.pauseOverlay.classList.remove('show');
+    runTimer();
+    sClick();
+  }else{
+    S.paused=true;
+    clearInterval(S.timerId);
+    els.pauseOverlay.classList.add('show');
+    sClick();
+  }
+}
+
+function goHome(){
+  clearInterval(S.timerId);
+  S.running=false;
+  els.pauseOverlay.classList.remove('show');
+  els.reportModal.classList.remove('show');
+  els.levelIntro.classList.remove('show');
+  showScreen('home');
+}
+
+els.startBtn.addEventListener('click',function(){ sStart(); startRun(); });
+els.pauseBtn.addEventListener('click',togglePause);
+els.resumeBtn.addEventListener('click',togglePause);
+els.quitBtn.addEventListener('click',goHome);
+els.clearBtn.addEventListener('click',function(){
+  if(S.screen!=='game'||S.lock) return;
+  S.selected=[];
   renderTray();
+  sClick();
 });
-
-function startTimer(){
-  timeLeft=60;
-  timerFill.style.width='100%';
-  timerFill.classList.remove('danger');
-  timeEl.textContent='60s';
-  clearInterval(timerId);
-  timerId=setInterval(()=>{
-    timeLeft=Math.max(0,timeLeft-.1);
-    const secs=Math.ceil(timeLeft);
-    timeEl.textContent=secs+'s';
-    timerFill.style.width=(timeLeft/60*100)+'%';
-    timerFill.classList.toggle('danger',timeLeft<=10);
-    if(timeLeft<=0){clearInterval(timerId);endGame();}
-  },100);
+els.replayBtn.addEventListener('click',function(){
+  els.reportModal.classList.remove('show');
+  sStart();
+  startRun();
+});
+els.homeBtn.addEventListener('click',goHome);
+els.saveBtn.addEventListener('click',function(){
+  var list=store.get('canteen_reports',[]);
+  if(!Array.isArray(list)) list=[];
+  list.unshift(S.latest);
+  store.set('canteen_reports', list.slice(0,5));
+  els.saveBtn.classList.add('saved');
+  els.saveBtn.textContent='✅ 已保存';
+  showToast('📸 战报已保存到本机');
+  setTimeout(function(){
+    els.saveBtn.classList.remove('saved');
+    els.saveBtn.textContent='📸 保存战报';
+  },1600);
+});
+var soundBtns=document.querySelectorAll('.sound-icon');
+for(var i=0;i<soundBtns.length;i++){
+  soundBtns[i].addEventListener('click',toggleSound);
 }
 
-function endGame(){
-  gameOver=true;
-  sEnd();
-  finalScoreEl.textContent=score;
-  rankTextEl.textContent=rankOf(score);
-  modalEl.classList.add('show');
-}
-
-function rankOf(s){
-  if(s>=30) return '🏅 五星大厨！速度惊人！';
-  if(s>=20) return '🥈 金牌主厨，再来一单！';
-  if(s>=10) return '🥉 越来越熟练啦！';
-  return '🌱 刚开业，继续加油！';
-}
-
-function resetGame(){
-  score=0;
-  scoreEl.textContent='0';
-  gameOver=false;
-  lock=false;
-  modalEl.classList.remove('show');
-  newOrder();
-  startTimer();
-}
-
-replayBtn.addEventListener('click',resetGame);
-
-/* ---- 简单音效（WebAudio，无外部资源） ---- */
-let audioCtx=null;
-function beep(freq,dur,type,vol){
-  try{
-    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type=type;
-    o.frequency.value=freq;
-    g.gain.setValueAtTime(vol,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
-    o.connect(g).connect(audioCtx.destination);
-    o.start();
-    o.stop(audioCtx.currentTime+dur);
-  }catch(e){}
-}
-function sPick(){beep(520,.06,'triangle',.12);}
-function sGood(){beep(660,.09,'triangle',.14);setTimeout(()=>beep(880,.12,'triangle',.14),80);}
-function sBad(){beep(180,.18,'sawtooth',.07);}
-function sEnd(){[523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,.18,'triangle',.14),i*130));}
-
-/* ---- 启动 ---- */
+/* ===== BOOT ===== */
+syncSoundIcons();
+refreshBest();
 buildGrid();
-newOrder();
-startTimer();
+showScreen('home');
+})();
 </script>
 </body>
 </html>
