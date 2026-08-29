@@ -76,17 +76,11 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .gear-btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(120,60,20,.3);}
 .home-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2.4vh,18px);}
 .logo-badge{
-  width:clamp(112px,34vw,158px);height:clamp(112px,34vw,158px);border-radius:50%;
-  background:radial-gradient(circle at 36% 28%,#FFF6DC,#FFD394 55%,#F5A653);
-  border:6px solid #FFF3D6;
-  box-shadow:0 0 0 5px #B46A2C,0 10px 0 rgba(150,70,20,.32),0 22px 34px rgba(140,60,10,.32),inset 0 -12px 18px rgba(180,90,20,.28),inset 0 5px 9px rgba(255,255,255,.75);
-  display:flex;align-items:center;justify-content:center;font-size:clamp(50px,16vw,74px);
+  width:clamp(150px,46vw,210px);height:clamp(150px,46vw,210px);
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 12px 20px rgba(140,60,10,.38));
 }
-.logo-badge img{width:100%;height:100%;object-fit:contain;border-radius:50%;display:block;}
-.game-title{
-  font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:.09em;color:#fff;text-align:center;
-  text-shadow:0 3px 0 #E06A35,0 6px 0 rgba(160,60,15,.28),0 12px 24px rgba(160,60,15,.42);
-}
+.logo-badge img{width:100%;height:100%;object-fit:contain;display:block;}
 .slogan{font-size:clamp(11px,3.2vw,13.5px);color:#7A3F1F;font-weight:800;letter-spacing:.05em;text-align:center;padding:7px 16px;background:rgba(255,248,230,.62);border-radius:999px;box-shadow:0 2px 0 rgba(150,70,20,.14),inset 0 1px 0 rgba(255,255,255,.8);}
 .home-footer{margin-top:auto;padding-bottom:6px;}
 .mini-tip{margin-top:10px;text-align:center;font-size:11px;color:#8A4E2E;font-weight:700;}
@@ -166,12 +160,12 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .order-body{flex:1;min-width:0;}
 .order-text{font-size:11px;font-weight:800;color:#6B3F1C;display:block;margin-bottom:4px;}
 .order-items{display:flex;gap:8px;min-height:38px;align-items:center;flex-wrap:nowrap;overflow:hidden;}
-.order-chip{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(180deg,#FFFDF6,#FFF0DC);border:2px dashed #C98A4B;border-radius:12px;padding:5px 9px;font-size:13px;font-weight:900;color:var(--ink);box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1.5px 0 #fff;white-space:nowrap;}
-.order-chip img{width:20px;height:20px;object-fit:contain;vertical-align:middle;}
+.order-chip{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(180deg,#FFFDF6,#FFF0DC);border:2px dashed #C98A4B;border-radius:12px;padding:5px 10px;font-size:13px;font-weight:900;color:var(--ink);box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1.5px 0 #fff;white-space:nowrap;}
+.order-chip img{width:28px;height:28px;object-fit:contain;vertical-align:middle;}
 .grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,2.2vw,11px);margin-bottom:8px;}
 .food-btn{
   position:relative;border-radius:16px;font-weight:900;color:var(--ink);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   background:
     radial-gradient(circle at 50% 18%, rgba(255,255,255,.95), rgba(255,255,255,0) 62%),
     linear-gradient(180deg,#FFFFFF 0%,#FFF0DC 100%);
@@ -179,8 +173,8 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   box-shadow:0 5px 0 rgba(120,60,20,.35),0 9px 14px rgba(120,60,20,.16),inset 0 2px 0 #fff,inset 0 -4px 7px rgba(200,120,40,.12);
   transition:transform .07s,box-shadow .07s;
 }
-.food-btn .f-img{width:clamp(28px,9vw,40px);height:clamp(28px,9vw,40px);object-fit:contain;line-height:1;filter:drop-shadow(0 2px 1px rgba(120,60,20,.2));}
-.food-btn .f-name{font-size:clamp(9px,3vw,12px);font-weight:800;color:var(--ink2);}
+.food-btn .f-img{width:clamp(44px,14vw,62px);height:clamp(44px,14vw,62px);object-fit:contain;line-height:1;filter:drop-shadow(0 3px 2px rgba(120,60,20,.25));}
+.food-btn .f-name{font-size:clamp(11px,3.4vw,14px);font-weight:800;color:var(--ink2);}
 .food-btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(120,60,20,.35);}
 .food-btn.picked{background:linear-gradient(180deg,#FFF3D6,#FFE3AE);border-color:#D9953F;box-shadow:0 4px 0 #B8772A,0 0 0 3px rgba(255,179,92,.45),inset 0 2px 0 #fff;}
 .food-btn.picked .f-img{animation:pick .25s ease;}
@@ -189,9 +183,9 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 @keyframes wrongFlash{0%{background:linear-gradient(180deg,#FFE0D6,#FFC3B2)}100%{background:linear-gradient(180deg,#FFFFFF,#FFF0DC)}}
 .tray-row{display:flex;gap:10px;align-items:stretch;}
-.tray{flex:1;display:flex;gap:8px;padding:9px 10px;min-height:56px;border-radius:16px;background:linear-gradient(180deg,#F8DFB4 0%,#EFC893 100%);border:3px solid #7A4518;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(120,60,20,.25),0 4px 0 rgba(120,60,20,.3);}
-.tray-slot{flex:1;border:2px dashed #A96A30;border-radius:12px;background:rgba(255,248,235,.62);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,28px);min-height:34px;}
-.tray-slot img{width:26px;height:26px;object-fit:contain;}
+.tray{flex:1;display:flex;gap:8px;padding:9px 10px;min-height:62px;border-radius:16px;background:linear-gradient(180deg,#F8DFB4 0%,#EFC893 100%);border:3px solid #7A4518;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(120,60,20,.25),0 4px 0 rgba(120,60,20,.3);}
+.tray-slot{flex:1;border:2px dashed #A96A30;border-radius:12px;background:rgba(255,248,235,.62);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,28px);min-height:38px;}
+.tray-slot img{width:36px;height:36px;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(120,60,20,.2));}
 .tray-slot.fill{border-style:solid;border-color:#C98A4B;background:#fff;box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1px 0 #fff;}
 .tray.bad{animation:shake .4s;}
 .trash-btn{
@@ -214,20 +208,19 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 #toast{position:absolute;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-140%);z-index:90;background:rgba(80,40,15,.94);color:#fff;font-size:13px;font-weight:800;padding:9px 16px;border-radius:999px;transition:transform .3s ease;box-shadow:0 8px 20px rgba(0,0,0,.25);pointer-events:none;max-width:86vw;text-align:center;}
 #toast.show{transform:translateX(-50%) translateY(0);}
 @media (max-height:640px){
-  .logo-badge{width:96px;height:96px;font-size:44px;}
+  .logo-badge{width:130px;height:130px;}
   .home-hero{gap:6px;}
   .home-chef{height:96px;}
   .order-card{padding:8px 10px;}
   .grid{gap:6px;margin-bottom:6px;}
-  .tray{min-height:48px;padding:7px 8px;}
+  .tray{min-height:54px;padding:7px 8px;}
   .status-row{margin-bottom:6px;}
   .level-bar{margin-bottom:6px;}
   .panel{padding:14px 14px 12px;}
   .level-grid{gap:7px;}
 }
 @media (max-height:560px){
-  .logo-badge{width:76px;height:76px;font-size:32px;}
-  .game-title{font-size:24px;}
+  .logo-badge{width:105px;height:105px;}
   .avatar{width:46px;height:46px;font-size:25px;}
   .slogan{padding:5px 12px;}
   .home-chef{height:64px;}
@@ -249,7 +242,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   </div>
   <div class="home-hero">
     <div class="logo-badge"><img class="logo-img" src='logo.png' alt='Logo'></div>
-    <h1 class="game-title">爆忙！一人食堂</h1>
     <p class="slogan">一个人，也要把整间食堂经营得热气腾腾</p>
     <img class="home-chef" src="chef.png" alt="厨师">
   </div>
