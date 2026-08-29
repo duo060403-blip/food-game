@@ -94,6 +94,9 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 #screenHome{
   background:linear-gradient(rgba(64,28,10,.16),rgba(64,28,10,.16)),url('bg.png') center/cover no-repeat;
 }
+#screenGame{
+  background:linear-gradient(rgba(64,28,10,.16),rgba(64,28,10,.16)),url('bg.png') center/cover no-repeat;
+}
 .home-chef{
   flex:none;height:clamp(92px,24vh,160px);width:auto;pointer-events:none;
   filter:drop-shadow(0 8px 10px rgba(90,40,10,.38));
@@ -164,6 +167,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .order-text{font-size:11px;font-weight:800;color:#6B3F1C;display:block;margin-bottom:4px;}
 .order-items{display:flex;gap:8px;min-height:38px;align-items:center;flex-wrap:nowrap;overflow:hidden;}
 .order-chip{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(180deg,#FFFDF6,#FFF0DC);border:2px dashed #C98A4B;border-radius:12px;padding:5px 9px;font-size:13px;font-weight:900;color:var(--ink);box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1.5px 0 #fff;white-space:nowrap;}
+.order-chip img{width:20px;height:20px;object-fit:contain;vertical-align:middle;}
 .grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,2.2vw,11px);margin-bottom:8px;}
 .food-btn{
   position:relative;border-radius:16px;font-weight:900;color:var(--ink);
@@ -175,11 +179,11 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   box-shadow:0 5px 0 rgba(120,60,20,.35),0 9px 14px rgba(120,60,20,.16),inset 0 2px 0 #fff,inset 0 -4px 7px rgba(200,120,40,.12);
   transition:transform .07s,box-shadow .07s;
 }
-.food-btn .f-emoji{font-size:clamp(22px,8vw,34px);line-height:1;filter:drop-shadow(0 2px 1px rgba(120,60,20,.2));}
+.food-btn .f-img{width:clamp(28px,9vw,40px);height:clamp(28px,9vw,40px);object-fit:contain;line-height:1;filter:drop-shadow(0 2px 1px rgba(120,60,20,.2));}
 .food-btn .f-name{font-size:clamp(9px,3vw,12px);font-weight:800;color:var(--ink2);}
 .food-btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(120,60,20,.35);}
 .food-btn.picked{background:linear-gradient(180deg,#FFF3D6,#FFE3AE);border-color:#D9953F;box-shadow:0 4px 0 #B8772A,0 0 0 3px rgba(255,179,92,.45),inset 0 2px 0 #fff;}
-.food-btn.picked .f-emoji{animation:pick .25s ease;}
+.food-btn.picked .f-img{animation:pick .25s ease;}
 @keyframes pick{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
 .food-btn.wrong{animation:shake .4s,wrongFlash .5s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
@@ -187,6 +191,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .tray-row{display:flex;gap:10px;align-items:stretch;}
 .tray{flex:1;display:flex;gap:8px;padding:9px 10px;min-height:56px;border-radius:16px;background:linear-gradient(180deg,#F8DFB4 0%,#EFC893 100%);border:3px solid #7A4518;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(120,60,20,.25),0 4px 0 rgba(120,60,20,.3);}
 .tray-slot{flex:1;border:2px dashed #A96A30;border-radius:12px;background:rgba(255,248,235,.62);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,28px);min-height:34px;}
+.tray-slot img{width:26px;height:26px;object-fit:contain;}
 .tray-slot.fill{border-style:solid;border-color:#C98A4B;background:#fff;box-shadow:0 2px 0 rgba(120,60,20,.15),inset 0 1px 0 #fff;}
 .tray.bad{animation:shake .4s;}
 .trash-btn{
@@ -407,15 +412,15 @@ const LS = {
 };
 
 const FOODS = [
-  { k:'burger',   e:'🍔', n:'汉堡' },
-  { k:'sushi',    e:'🍣', n:'寿司' },
-  { k:'ramen',    e:'🍜', n:'拉面' },
-  { k:'dessert',  e:'🍰', n:'甜点' },
-  { k:'milktea',  e:'🧋', n:'奶茶' },
-  { k:'kebab',    e:'🍢', n:'烤串' },
-  { k:'dumpling', e:'🥟', n:'饺子' },
-  { k:'icecream', e:'🍦', n:'冰淇淋' },
-  { k:'pancake',  e:'🥞', n:'松饼' }
+  { k:'burger',   img:'burger.png',   n:'汉堡' },
+  { k:'sushi',    img:'sushi.png',    n:'寿司' },
+  { k:'ramen',    img:'ramen.png',    n:'拉面' },
+  { k:'cake',     img:'cake.png',     n:'甜点' },
+  { k:'milktea',  img:'milktea.png',  n:'奶茶' },
+  { k:'bbq',      img:'bbq.png',      n:'烤串' },
+  { k:'dumpling', img:'dumpling.png', n:'饺子' },
+  { k:'icecream', img:'icecream.png', n:'冰淇淋' },
+  { k:'pancake',  img:'pancake.png',  n:'松饼' }
 ];
 
 const LEVELS = [
@@ -440,12 +445,9 @@ const RANKS = [
   { name:'五星主厨', lv:6, need:160 }
 ];
 
-const LEVEL_EMOJI = ['🍔','🍜','🍣','🧋','🍢','🥟','🍦','🥞','🍰','🏆'];
-
 let best    = LS.get('best', 0);
 let unlock  = LS.get('unlock', 1);
 let soundOn = LS.get('sound', true);
-let reports = LS.get('reports', []);
 
 let curIdx = 0, score = 0, timeLeft = 60, timerId = null;
 let order = [], tray = [], playing = false, paused = false;
@@ -519,7 +521,7 @@ function renderLevels(){
     const ok = i < unlock;
     const c = document.createElement('button');
     c.className = 'level-chip' + (ok ? ' on' : ' locked');
-    c.innerHTML = '<span class="lv-emoji">' + (ok ? LEVEL_EMOJI[i] : '🔒') + '</span><span class="lv-num">' + (i + 1) + ' 关 · ' + LEVELS[i].name + '</span>';
+    c.innerHTML = '<span class="lv-emoji">' + (ok ? '🍳' : '🔒') + '</span><span class="lv-num">' + (i + 1) + ' 关 · ' + LEVELS[i].name + '</span>';
     c.addEventListener('click', () => {
       if(!ok){
         c.classList.remove('wrong'); void c.offsetWidth; c.classList.add('wrong');
@@ -579,7 +581,7 @@ function newOrder(){
     const f = FOODS.find(x => x.k === k);
     const chip = document.createElement('span');
     chip.className = 'order-chip';
-    chip.textContent = f.e + ' ' + f.n;
+    chip.innerHTML = '<img src="' + f.img + '" alt="' + f.n + '">' + f.n;
     wrap.appendChild(chip);
   });
   clearTray();
@@ -589,7 +591,7 @@ function buildGrid(){
   FOODS.forEach(f => {
     const btn = document.createElement('button');
     btn.className = 'food-btn';
-    btn.innerHTML = '<span class="f-emoji">' + f.e + '</span><span class="f-name">' + f.n + '</span>';
+    btn.innerHTML = '<img class="f-img" src="' + f.img + '" alt="' + f.n + '"><span class="f-name">' + f.n + '</span>';
     btn.addEventListener('click', () => pickFood(f.k, btn));
     grid.appendChild(btn);
   });
@@ -612,7 +614,7 @@ function updateTrayUI(){
   slots.forEach((s, i) => {
     if(tray[i]){
       const f = FOODS.find(x => x.k === tray[i]);
-      s.textContent = f.e;
+      s.innerHTML = '<img src="' + f.img + '" alt="' + f.n + '">';
       s.classList.add('fill');
     } else {
       s.textContent = '';
