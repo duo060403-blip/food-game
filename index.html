@@ -243,10 +243,10 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     <button class="gear-btn" id="gearBtn" aria-label="设置">⚙️</button>
   </div>
   <div class="home-hero">
-    <div class="logo-badge"><img class="logo-img" src='Logo.png' alt='Logo'></div>
+    <div class="logo-badge"><img class="logo-img" src='logo.png' alt='Logo'></div>
     <h1 class="game-title">爆忙！一人食堂</h1>
     <p class="slogan">一个人，也要把整间食堂经营得热气腾腾</p>
-    <img class="home-chef" src="厨师透明%20PNG.png" alt="厨师">
+    <img class="home-chef" src="chef.png" alt="厨师">
   </div>
   <div class="home-footer">
     <button class="btn3d big" id="startBtn">🛎️ 开始游戏</button>
@@ -585,157 +585,169 @@ function newOrder(){
   clearTray();
 }
 function buildGrid(){
-  const g = $('#grid'); g.innerHTML = '';
+  const grid = $('#grid'); grid.innerHTML = '';
   FOODS.forEach(f => {
-    const b = document.createElement('button');
-    b.className = 'food-btn'; b.dataset.k = f.k;
-    b.innerHTML = '<span class="f-emoji">' + f.e + '</span><span class="f-name">' + f.n + '</span>';
-    b.addEventListener('click', () => clickFood(f.k, b));
-    g.appendChild(b);
+    const btn = document.createElement('button');
+    btn.className = 'food-btn';
+    btn.innerHTML = '<span class="f-emoji">' + f.e + '</span><span class="f-name">' + f.n + '</span>';
+    btn.addEventListener('click', () => pickFood(f.k, btn));
+    grid.appendChild(btn);
   });
 }
-function clickFood(k, btn){
+function pickFood(k, btn){
   if(!playing || paused) return;
-  if(tray.length >= order.length){ punish(btn); return; }          // 超额
-  const need = order.filter(x => tray.indexOf(x) < 0);
-  if(need.indexOf(k) < 0){ punish(btn); return; }                  // 点错
-  tray.push(k); btn.classList.add('picked'); addTray(k); sfx.pick();
+  if(tray.length >= 3) return;
+  
+  btn.classList.remove('picked'); void btn.offsetWidth; btn.classList.add('picked');
+  sfx.pick();
+  tray.push(k);
+  updateTrayUI();
+
   if(tray.length === order.length){
-    setTimeout(() => {
-      score++;
-      $('#score').textContent = score;
-      $('#kpiText').textContent = score + ' / ' + LEVELS[curIdx].kpi;
-      $('#kpiFill').style.width = Math.min(100, score / LEVELS[curIdx].kpi * 100) + '%';
-      sfx.ok();
-      if(score >= LEVELS[curIdx].kpi){ levelClear(); } else { newOrder(); }
-    }, 240);
+    checkOrder();
   }
 }
-function addTray(k){
-  const f = FOODS.find(x => x.k === k);
-  const slots = $$('#tray .tray-slot');
-  for(const s of slots){
-    if(!s.classList.contains('fill')){ s.textContent = f.e; s.classList.add('fill'); return; }
-  }
+function updateTrayUI(){
+  const slots = $$('.tray-slot');
+  slots.forEach((s, i) => {
+    if(tray[i]){
+      const f = FOODS.find(x => x.k === tray[i]);
+      s.textContent = f.e;
+      s.classList.add('fill');
+    } else {
+      s.textContent = '';
+      s.classList.remove('fill');
+    }
+  });
 }
 function clearTray(){
   tray = [];
-  $$('#tray .tray-slot').forEach(s => { s.textContent = ''; s.classList.remove('fill'); });
-  $$('#grid .food-btn').forEach(b => b.classList.remove('picked', 'wrong'));
+  updateTrayUI();
 }
-function punish(btn){
-  if(btn){ btn.classList.remove('wrong'); void btn.offsetWidth; btn.classList.add('wrong'); }
-  const tr = $('#tray'); tr.classList.remove('bad'); void tr.offsetWidth; tr.classList.add('bad');
-  if(navigator.vibrate){ try{ navigator.vibrate(160); }catch(e){} }
-  clearTray();
-  sfx.fail();
-  toast('点错啦！托盘已清空 💦');
+function checkOrder(){
+  let match = true;
+  if(tray.length !== order.length){
+    match = false;
+  } else {
+    for(let i = 0; i < order.length; i++){
+      if(tray[i] !== order[i]){ match = false; break; }
+    }
+  }
+
+  if(match){
+    sfx.ok();
+    score++;
+    $('#score').textContent = score;
+    const kpi = LEVELS[curIdx].kpi;
+    const p = Math.min(100, (score / kpi) * 100);
+    $('#kpiFill').style.width = p + '%';
+    $('#kpiText').textContent = score + ' / ' + kpi;
+
+    if(score >= kpi){
+      clearInterval(timerId); timerId = null;
+      playing = false;
+      setTimeout(levelClear, 250);
+    } else {
+      setTimeout(newOrder, 250);
+    }
+  } else {
+    sfx.fail();
+    const tEl = $('#tray');
+    tEl.classList.remove('bad'); void tEl.offsetWidth; tEl.classList.add('bad');
+    $$('.food-btn').forEach(b => {
+      b.classList.remove('wrong'); void b.offsetWidth; b.classList.add('wrong');
+    });
+    toast('点错啦！托盘已清空 ❌');
+    setTimeout(clearTray, 300);
+  }
 }
+
 function levelClear(){
-  playing = false; clearInterval(timerId); timerId = null;
-  if(best < score){ best = score; LS.set('best', best); }
-  if(unlock < LEVELS.length){
-    unlock = Math.max(unlock, curIdx + 2);
-    if(unlock > LEVELS.length) unlock = LEVELS.length;
+  sfx.win();
+  if(score > best){ best = score; LS.set('best', best); }
+  if(curIdx + 1 >= unlock && unlock < LEVELS.length){
+    unlock = curIdx + 1;
     LS.set('unlock', unlock);
   }
-  sfx.win();
-  if(curIdx === LEVELS.length - 1){ showFinalReport(); return; }
-  $('#clearSub').textContent = '第 ' + (curIdx + 1) + ' 关 · ' + LEVELS[curIdx].name;
+  $('#clearSub').textContent = levelLabel(curIdx);
   $('#clearScore').textContent = score + ' 分';
   showModal('clearModal');
 }
 function levelFail(){
-  playing = false; clearInterval(timerId); timerId = null;
   sfx.fail();
-  $('#failSub').textContent = '第 ' + (curIdx + 1) + ' 关 · ' + LEVELS[curIdx].name;
+  if(score > best){ best = score; LS.set('best', best); }
+  const kpi = LEVELS[curIdx].kpi;
+  const diff = Math.max(0, kpi - score);
+  $('#failSub').textContent = levelLabel(curIdx);
   $('#failScore').textContent = score + ' 分';
-  $('#failDiff').textContent = Math.max(0, LEVELS[curIdx].kpi - score) + ' 分';
+  $('#failDiff').textContent = diff + ' 份';
   showModal('failModal');
-}
-function showFinalReport(){
-  const r = getRank(best);
-  $('#reportRank').textContent = '🏅 ' + r.name + ' · Lv.' + r.lv;
-  const n = new Date();
-  $('#reportTime').textContent = ('0' + n.getHours()).slice(-2) + ':' + ('0' + n.getMinutes()).slice(-2);
-  $('#reportScore').textContent = score + ' 分';
-  $('#reportBest').textContent = best + ' 分';
-  $('#reportXp').style.width = Math.min(100, best / 160 * 100) + '%';
-  showModal('reportModal');
 }
 
 /* ---------- 事件绑定 ---------- */
-$('#startBtn').addEventListener('click', openSelect);
-$('#gearBtn').addEventListener('click', () => { sfx.click(); showModal('settingsModal'); });
-$('#homeGuideLink').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
-$('#guideBtn').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
-$('#guideOkBtn').addEventListener('click', () => { hideAllModals(); sfx.click(); });
-
-$('#selHomeBtn').addEventListener('click', goHome);
-$('#goStartBtn').addEventListener('click', () => {
-  const i = Math.min(unlock, LEVELS.length) - 1;
-  hideAllModals(); startLevel(i);
-});
-
-function toggleSound(){
-  soundOn = !soundOn; LS.set('sound', soundOn);
+document.addEventListener('DOMContentLoaded', () => {
+  refreshHome();
   refreshSoundBtns();
-  if(soundOn) sfx.click();
-  toast(soundOn ? '音效已开启 🔊' : '音效已关闭 🔇');
-}
-$('#soundBtnGame').addEventListener('click', toggleSound);
-$('#soundBtnSet').addEventListener('click', toggleSound);
 
-$('#pauseBtn').addEventListener('click', () => {
-  if(!playing || paused) return;
-  paused = true;
-  $('#pauseInfo').textContent = score + ' / ' + LEVELS[curIdx].kpi;
-  showModal('pauseModal'); sfx.click();
-});
-$('#resumeBtn').addEventListener('click', () => { paused = false; hideAllModals(); sfx.click(); });
-$('#restartBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx); });
-$('#quitBtn').addEventListener('click', goHome);
+  $('#startBtn').addEventListener('click', openSelect);
+  $('#goStartBtn').addEventListener('click', () => {
+    sfx.click(); hideAllModals(); startLevel(0);
+  });
+  $('#selHomeBtn').addEventListener('click', goHome);
+  $('#gearBtn').addEventListener('click', () => { sfx.click(); showModal('settingsModal'); });
+  $('#homeGuideLink').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
+  
+  $('#soundBtnGame').addEventListener('click', () => {
+    soundOn = !soundOn; LS.set('sound', soundOn); refreshSoundBtns(); sfx.click();
+  });
+  $('#soundBtnSet').addEventListener('click', () => {
+    soundOn = !soundOn; LS.set('sound', soundOn); refreshSoundBtns(); sfx.click();
+  });
+  $('#guideBtn').addEventListener('click', () => { sfx.click(); showModal('guideModal'); });
+  $('#guideOkBtn').addEventListener('click', () => { sfx.click(); hideAllModals(); });
 
-$('#clearHomeBtn').addEventListener('click', goHome);
-$('#nextBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx + 1); });
+  $('#pauseBtn').addEventListener('click', () => {
+    if(!playing) return;
+    paused = true;
+    $('#pauseInfo').textContent = score + ' / ' + LEVELS[curIdx].kpi;
+    sfx.click(); showModal('pauseModal');
+  });
+  $('#resumeBtn').addEventListener('click', () => {
+    paused = false; hideAllModals(); sfx.click();
+  });
+  $('#restartBtn').addEventListener('click', () => {
+    hideAllModals(); startLevel(curIdx);
+  });
+  $('#quitBtn').addEventListener('click', goHome);
 
-$('#failHomeBtn').addEventListener('click', goHome);
-$('#retryBtn').addEventListener('click', () => { hideAllModals(); startLevel(curIdx); });
+  $('#clearBtn').addEventListener('click', () => {
+    if(!playing || paused) return;
+    sfx.click(); clearTray();
+  });
 
-$('#reportHomeBtn').addEventListener('click', goHome);
-$('#saveBtn').addEventListener('click', () => {
-  reports.unshift({ time: new Date().toLocaleString('zh-CN'), level: '第 ' + LEVELS.length + ' 关', score: score });
-  reports = reports.slice(0, 20);
-  LS.set('reports', reports);
-  sfx.ok(); toast('战报已保存到本地 📋');
-});
-
-$('#clearBtn').addEventListener('click', () => {
-  if(!playing || paused) return;
-  if(tray.length === 0){ toast('托盘已经空啦 🧽'); return; }
-  clearTray(); sfx.click(); toast('托盘已清空 🧽');
-});
-
-$$('.overlay').forEach(o => {
-  o.addEventListener('click', e => {
-    if(e.target !== o) return;
-    if(o.id === 'settingsModal' || o.id === 'guideModal' || o.id === 'selectModal'){
-      o.classList.remove('show');
-      if(o.id === 'selectModal') sfx.click();
+  $('#clearHomeBtn').addEventListener('click', goHome);
+  $('#nextBtn').addEventListener('click', () => {
+    sfx.click();
+    if(curIdx + 1 < LEVELS.length){
+      startLevel(curIdx + 1);
+    } else {
+      goHome(); toast('恭喜通关所有关卡！🏆');
     }
+  });
+
+  $('#failHomeBtn').addEventListener('click', goHome);
+  $('#retryBtn').addEventListener('click', () => {
+    sfx.click(); startLevel(curIdx);
+  });
+
+  // 遮罩点击关闭或忽略，保证按钮逻辑清晰
+  $$('.overlay').forEach(o => {
+    o.addEventListener('click', e => {
+      if(e.target === o && o.id === 'selectModal'){ goHome(); }
+    });
   });
 });
 
-document.addEventListener('visibilitychange', () => {
-  if(document.hidden && playing && !paused){ $('#pauseBtn').click(); }
-});
-
-/* ---------- 初始化 ---------- */
-refreshHome();
-refreshSoundBtns();
-buildGrid();
-newOrder();
-})();
-</script>
+})();</script>
 </body>
 </html>
