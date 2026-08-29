@@ -52,7 +52,23 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
 .btn3d.ghost{background:linear-gradient(180deg,#FFF8EC,#FFE2B8);color:var(--ink);border-color:#B8772A;box-shadow:0 6px 0 #9A6226,0 10px 18px rgba(150,70,20,.2),inset 0 2px 0 #fff;}
 .btn3d.ghost:active{transform:translateY(5px);box-shadow:0 1px 0 #9A6226,inset 0 2px 0 #fff;}
 .btn3d.big{font-size:clamp(19px,5.4vw,24px);border-radius:26px;padding:14px 18px;width:100%;}
-.btn3d.big img.start-icon{width:1.2em;height:1.2em;object-fit:contain;vertical-align:-0.15em;filter:drop-shadow(0 2px 2px rgba(120,40,10,.3));}
+.btn3d.custom-start{
+  background:none;
+  border:none;
+  box-shadow:none;
+  padding:0;
+  width:100%;
+  border-radius:0;
+  transition:transform .07s ease;
+}
+.btn3d.custom-start:active{transform:translateY(4px);box-shadow:none;}
+.btn3d.custom-start img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 7px 12px rgba(150,60,10,.35));
+}
 .btn3d.small{padding:10px 16px;font-size:14px;border-radius:15px;gap:6px;}
 .home-top{display:flex;align-items:flex-start;justify-content:space-between;padding:2px 2px 0;flex:none;}
 .rank-box{display:flex;align-items:center;gap:10px;min-width:0;}
@@ -273,7 +289,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     <img class="home-chef" src="chef.png" alt="厨师">
   </div>
   <div class="home-footer">
-    <button class="btn3d big" id="startBtn"><img class="start-icon" src="start.png" alt=""> 开始游戏</button>
+    <button class="btn3d custom-start" id="startBtn"><img src="start.png" alt="开始游戏"></button>
     <p class="mini-tip">无需登录 · 离线可玩 · <span class="link" id="homeGuideLink">新手引导</span></p>
   </div>
 </section>
@@ -327,7 +343,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     <div class="level-grid" id="levelGrid"></div>
     <div class="modal-btns">
       <button class="btn3d ghost" id="selHomeBtn">🏠 返回主页</button>
-      <button class="btn3d" id="goStartBtn"><img class="start-icon" src="start.png" alt=""> 直接开玩</button>
+      <button class="btn3d custom-start" id="goStartBtn" style="flex:1;"><img src="start.png" alt="直接开玩" style="max-height:48px;object-fit:contain;"></button>
     </div>
   </div>
 </div>
