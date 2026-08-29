@@ -57,9 +57,11 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   border:none;
   box-shadow:none;
   padding:0;
-  width:100%;
+  width:min(230px, 68vw);
+  margin:0 auto;
   border-radius:0;
   transition:transform .07s ease;
+  display:block;
 }
 .btn3d.custom-start:active{transform:translateY(4px);box-shadow:none;}
 .btn3d.custom-start img{
@@ -90,29 +92,30 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   display:flex;align-items:center;justify-content:center;transition:transform .07s,box-shadow .07s;
 }
 .gear-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(120,60,20,.3);}
-.home-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;gap:6px;}
-.logo-group{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;flex:none;}
+.home-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;gap:2px;}
+.logo-group{display:flex;flex-direction:column;align-items:center;width:100%;flex:none;}
 .logo-badge{
-  width:clamp(290px,90vw,380px);
+  width:clamp(280px,86vw,360px);
   height:auto;
   display:flex;align-items:center;justify-content:center;
   background:none;border:none;box-shadow:none;
+  margin:0 auto;
   filter:drop-shadow(0 10px 16px rgba(140,60,10,.4));
 }
 .logo-badge img{width:100%;height:auto;object-fit:contain;display:block;}
 .logo-subtitle{
-  font-size:clamp(13px,3.9vw,16px);
+  font-size:clamp(15px,4.5vw,19px);
   font-weight:900;
   color:#FFFBF0;
   letter-spacing:.08em;
   text-shadow:0 2px 0 #5C2E12,0 0 6px rgba(92,46,18,.8);
   text-align:center;
-  margin-top:0.5cm;
+  margin-top:0.25cm;
 }
 .home-chef{
-  flex:1;min-height:0;width:auto;max-height:29vh;object-fit:contain;pointer-events:none;
+  flex:1;min-height:0;width:auto;max-height:35vh;object-fit:contain;pointer-events:none;
   filter:drop-shadow(0 8px 12px rgba(90,40,10,.4));
-  margin-top:0.5cm;
+  margin-top:0.2cm;
 }
 .home-footer{margin-top:auto;padding-bottom:4px;flex:none;}
 .mini-tip{margin-top:8px;text-align:center;font-size:11px;color:#8A4E2E;font-weight:700;}
@@ -217,9 +220,10 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   filter:drop-shadow(0 3px 2px rgba(120,60,20,.25));
 }
 .food-btn[data-key="milktea"] .f-img{
-  width:125%;
-  height:125%;
+  width:112%;
+  height:112%;
   max-width:none;
+  transform: translateY(4px);
 }
 .food-btn .f-name{font-size:clamp(12px,3.6vw,15px);font-weight:800;color:var(--ink2);line-height:1;margin-bottom:4px;}
 .food-btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(120,60,20,.35);}
@@ -343,7 +347,7 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     <div class="level-grid" id="levelGrid"></div>
     <div class="modal-btns">
       <button class="btn3d ghost" id="selHomeBtn">🏠 返回主页</button>
-      <button class="btn3d custom-start" id="goStartBtn" style="flex:1;"><img src="start.png" alt="直接开玩" style="max-height:48px;object-fit:contain;"></button>
+      <button class="btn3d custom-start" id="goStartBtn" style="flex:1; width:auto; margin:0;"><img src="start.png" alt="直接开玩" style="max-height:42px; object-fit:contain; width:100%;"></button>
     </div>
   </div>
 </div>
