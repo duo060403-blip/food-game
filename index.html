@@ -219,12 +219,6 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
   display:block;
   filter:drop-shadow(0 3px 2px rgba(120,60,20,.25));
 }
-.food-btn[data-key="milktea"] .f-img{
-  width:112%;
-  height:112%;
-  max-width:none;
-  transform: translateY(4px);
-}
 .food-btn .f-name{font-size:clamp(12px,3.6vw,15px);font-weight:800;color:var(--ink2);line-height:1;margin-bottom:4px;}
 .food-btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(120,60,20,.35);}
 .food-btn.picked{background:linear-gradient(180deg,#FFF3D6,#FFE3AE);border-color:#D9953F;box-shadow:0 4px 0 #B8772A,0 0 0 3px rgba(255,179,92,.45),inset 0 2px 0 #fff;}
@@ -346,8 +340,8 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
     </div>
     <div class="level-grid" id="levelGrid"></div>
     <div class="modal-btns">
-      <button class="btn3d ghost" id="selHomeBtn">🏠 返回主页</button>
-      <button class="btn3d custom-start" id="goStartBtn" style="flex:1; width:auto; margin:0;"><img src="start.png" alt="直接开玩" style="max-height:42px; object-fit:contain; width:100%;"></button>
+      <button class="btn3d ghost" id="selHomeBtn" style="flex:1; padding:12px 10px; font-size:15px; border-radius:20px;">🏠 返回主页</button>
+      <button class="btn3d custom-start" id="goStartBtn" style="flex:1; width:auto; margin:0;"><img src="start.png" alt="直接开玩" style="max-height:46px; object-fit:contain; width:100%;"></button>
     </div>
   </div>
 </div>
